@@ -264,6 +264,26 @@ exports.login = async (req, res) => {
 /**
  * Protect routes - middleware to verify JWT token
  */
+exports.restrictTo = (...roles) => {
+  return (req, res, next) => {
+    if (!req.user || !req.user.role) {
+      return res.status(403).json({
+        success: false,
+        message: 'You do not have permission to perform this action'
+      });
+    }
+    
+    if (!roles.includes(req.user.role)) {
+      return res.status(403).json({
+        success: false,
+        message: 'You do not have permission to perform this action'
+      });
+    }
+    
+    next();
+  };
+};
+
 exports.protect = async (req, res, next) => {
   try {
     let token;
