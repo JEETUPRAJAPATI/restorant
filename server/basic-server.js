@@ -513,6 +513,9 @@ app.post('/api/auth/verify-otp', (req, res) => {
   });
 });
 
+app.use('/api/restaurants', require('./routes/restaurants'));
+app.use('/api/admin', require('./routes/admin'));
+
 // Start server
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
