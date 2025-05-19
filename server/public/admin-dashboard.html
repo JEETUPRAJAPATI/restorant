@@ -142,7 +142,23 @@
                 window.location.href = '/admin-login.html';
                 return;
             }
-            loadDashboardData();
+            
+            // Verify token validity
+            fetch('/api/admin/stats', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }).then(response => {
+                if (response.status === 401) {
+                    localStorage.removeItem('token');
+                    window.location.href = '/admin-login.html';
+                    return;
+                }
+                loadDashboardData();
+            }).catch(err => {
+                console.error('Auth check failed:', err);
+                window.location.href = '/admin-login.html';
+            });
         };
 
         async function loadDashboardData() {
