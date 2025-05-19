@@ -20,19 +20,14 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Database connection with MongoDB Memory Server for development
-const { MongoMemoryServer } = require('mongodb-memory-server');
+// MongoDB connection
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/tablefete';
 const seedData = require('./utils/seedData');
 
 // Start in-memory MongoDB instance for development/testing
 async function startServer() {
   try {
-    const mongoServer = await MongoMemoryServer.create();
-    const mongoUri = mongoServer.getUri();
-    
-    console.log(`Using in-memory MongoDB server at ${mongoUri}`);
-    
-    await mongoose.connect(mongoUri, {
+    await mongoose.connect(MONGODB_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
