@@ -146,6 +146,13 @@ router.post('/register', (req, res) => {
  * @desc Login user with phone number (starts OTP process)
  * @access Public
  */
+/**
+ * @route POST /api/auth/admin-register
+ * @desc Register a new restaurant admin
+ * @access Public
+ */
+router.post('/admin-register', authController.adminRegister);
+
 router.post('/login', (req, res) => {
   try {
     const { phoneNumber } = req.body;
