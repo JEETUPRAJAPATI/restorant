@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const auth = require('../utils/auth');
+const authController = require('../controllers/authController');
 
 /**
  * @route POST /api/auth/send-otp
