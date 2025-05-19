@@ -413,21 +413,32 @@ exports.adminRegister = async (req, res) => {
       });
     }
 
-    // Create new admin user
-    const user = await User.create({
+    // Create new admin user with hashed password
+    const user = new User({
       name,
       email,
-      password,
+      password, // Password will be hashed by the model's pre-save hook
       role: 'admin',
       createdAt: new Date()
     });
+    await user.save();
 
-    // Create associated restaurant
-    const restaurant = await Restaurant.create({
+    // Create associated restaurant with required fields
+    const restaurant = new Restaurant({
       name: restaurantName,
+      description: `Welcome to ${restaurantName}`,
+      address: 'To be updated',
+      phone: 'To be updated',
+      cuisine: 'Multiple',
+      priceRange: 2,
       admin: user._id,
+      location: {
+        latitude: 0,
+        longitude: 0
+      },
       createdAt: new Date()
     });
+    await restaurant.save();
 
     res.status(201).json({
       success: true,
