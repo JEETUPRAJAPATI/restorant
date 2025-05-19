@@ -103,10 +103,21 @@
     </div>
 
     <script>
+        // Check authentication
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = '/admin-login.html';
+        }
+
         // Load dashboard stats
         async function loadStats() {
+            const authHeader = localStorage.getItem('authHeader');
             try {
-                const response = await fetch('/api/admin/stats');
+                const response = await fetch('/api/admin/stats', {
+                    headers: {
+                        'Authorization': authHeader
+                    }
+                });
                 const data = await response.json();
                 document.getElementById('totalRestaurants').textContent = data.restaurants;
                 document.getElementById('totalBookings').textContent = data.bookings;

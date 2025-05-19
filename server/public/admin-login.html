@@ -75,6 +75,12 @@
                     // Store token and user data
                     localStorage.setItem('token', data.token);
                     localStorage.setItem('user', JSON.stringify(data.user));
+                    
+                    // Add authorization header for future requests
+                    const authHeader = `Bearer ${data.token}`;
+                    localStorage.setItem('authHeader', authHeader);
+                    
+                    // Redirect to dashboard
                     window.location.href = '/admin-dashboard.html';
                 } else {
                     alert(data.message || 'Invalid credentials');
