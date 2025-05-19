@@ -221,16 +221,16 @@ app.get('/', (req, res) => {
 // Get all restaurants
 app.get('/api/restaurants', (req, res) => {
   const { latitude, longitude, cuisine, priceRange, rating } = req.query;
-  
+
   let filteredRestaurants = [...restaurants];
-  
+
   // Filter by cuisine if provided
   if (cuisine) {
     filteredRestaurants = filteredRestaurants.filter(r => 
       r.cuisine.toLowerCase() === cuisine.toLowerCase()
     );
   }
-  
+
   // Filter by price range if provided
   if (priceRange) {
     const price = parseInt(priceRange);
@@ -238,7 +238,7 @@ app.get('/api/restaurants', (req, res) => {
       filteredRestaurants = filteredRestaurants.filter(r => r.priceRange <= price);
     }
   }
-  
+
   // Filter by rating if provided
   if (rating) {
     const minRating = parseFloat(rating);
@@ -246,32 +246,32 @@ app.get('/api/restaurants', (req, res) => {
       filteredRestaurants = filteredRestaurants.filter(r => r.rating >= minRating);
     }
   }
-  
+
   // Sort by distance if latitude and longitude provided
   if (latitude && longitude) {
     const userLat = parseFloat(latitude);
     const userLng = parseFloat(longitude);
-    
+
     if (!isNaN(userLat) && !isNaN(userLng)) {
       // Calculate distance for each restaurant
       filteredRestaurants.forEach(r => {
         const restaurantLat = r.location.latitude;
         const restaurantLng = r.location.longitude;
-        
+
         // Simple distance calculation (not actual distance, just for sorting)
         const distance = Math.sqrt(
           Math.pow(userLat - restaurantLat, 2) + 
           Math.pow(userLng - restaurantLng, 2)
         );
-        
+
         r.distance = distance;
       });
-      
+
       // Sort by distance
       filteredRestaurants.sort((a, b) => a.distance - b.distance);
     }
   }
-  
+
   res.json({ 
     success: true, 
     count: filteredRestaurants.length, 
@@ -283,14 +283,14 @@ app.get('/api/restaurants', (req, res) => {
 app.get('/api/restaurants/:id', (req, res) => {
   const id = req.params.id;
   const restaurant = restaurants.find(r => r.id === id);
-  
+
   if (!restaurant) {
     return res.status(404).json({ 
       success: false, 
       message: 'Restaurant not found' 
     });
   }
-  
+
   res.json({ 
     success: true, 
     restaurant 
@@ -301,7 +301,7 @@ app.get('/api/restaurants/:id', (req, res) => {
 app.get('/api/restaurants/:id/platters', (req, res) => {
   const id = req.params.id;
   const restaurantPlatters = platters[id] || [];
-  
+
   res.json({
     success: true,
     count: restaurantPlatters.length,
@@ -314,62 +314,62 @@ app.get('/api/restaurants/:id/platters/recommendations', (req, res) => {
   const id = req.params.id;
   const { budget, partySize, preferences } = req.query;
   const restaurantPlatters = platters[id] || [];
-  
+
   if (!budget || !partySize) {
     return res.status(400).json({
       success: false,
       message: 'Budget and party size are required for recommendations'
     });
   }
-  
+
   const budgetNum = parseFloat(budget);
   const partySizeNum = parseInt(partySize);
   const preferencesArray = preferences ? preferences.split(',') : [];
-  
+
   // Simple recommendation algorithm
   let recommendations = restaurantPlatters.filter(platter => {
     // Check if price per person is within budget
     const pricePerPerson = platter.price / platter.servingSize;
     return pricePerPerson <= budgetNum;
   });
-  
+
   // Filter by preferences if provided
   if (preferencesArray.length > 0) {
     const plattersWithPreferences = recommendations.filter(platter => 
       preferencesArray.some(pref => platter.tags.includes(pref))
     );
-    
+
     // Only use preference-filtered platters if we have any
     if (plattersWithPreferences.length > 0) {
       recommendations = plattersWithPreferences;
     }
   }
-  
+
   // Add a score to each recommendation
   recommendations = recommendations.map(platter => {
     // Budget utilization score (0-1)
     const pricePerPerson = platter.price / platter.servingSize;
     const budgetScore = pricePerPerson / budgetNum;
-    
+
     // Serving efficiency score (0-1)
     const servingEfficiency = 1 - Math.abs(platter.servingSize - partySizeNum) / partySizeNum;
     const servingScore = servingEfficiency > 0 ? servingEfficiency : 0.1;
-    
+
     // Combined score
     const score = (budgetScore * 0.6) + (servingScore * 0.4);
-    
+
     return {
       ...platter,
       score: parseFloat(score.toFixed(2))
     };
   });
-  
+
   // Sort by score (higher is better)
   recommendations.sort((a, b) => b.score - a.score);
-  
+
   // Return top 3 recommendations
   recommendations = recommendations.slice(0, 3);
-  
+
   res.json({
     success: true,
     count: recommendations.length,
@@ -381,7 +381,7 @@ app.get('/api/restaurants/:id/platters/recommendations', (req, res) => {
 app.get('/api/restaurants/:id/addons', (req, res) => {
   const id = req.params.id;
   const restaurantAddons = addons[id] || [];
-  
+
   res.json({
     success: true,
     count: restaurantAddons.length,
@@ -393,15 +393,15 @@ app.get('/api/restaurants/:id/addons', (req, res) => {
 app.get('/api/restaurants/:id/addons/categories', (req, res) => {
   const id = req.params.id;
   const restaurantAddons = addons[id] || [];
-  
+
   // Extract unique categories
   const categoriesSet = new Set();
   restaurantAddons.forEach(addon => {
     categoriesSet.add(addon.category);
   });
-  
+
   const categories = Array.from(categoriesSet);
-  
+
   res.json({
     success: true,
     count: categories.length,
@@ -413,7 +413,7 @@ app.get('/api/restaurants/:id/addons/categories', (req, res) => {
 app.get('/api/platters/:id', (req, res) => {
   const platterId = req.params.id;
   let platter = null;
-  
+
   // Search for the platter in all restaurants
   for (const restaurantId in platters) {
     const found = platters[restaurantId].find(p => p.id === platterId);
@@ -422,14 +422,14 @@ app.get('/api/platters/:id', (req, res) => {
       break;
     }
   }
-  
+
   if (!platter) {
     return res.status(404).json({
       success: false,
       message: 'Platter not found'
     });
   }
-  
+
   res.json({
     success: true,
     platter
@@ -440,14 +440,14 @@ app.get('/api/platters/:id', (req, res) => {
 app.get('/api/restaurants/:id/availability', (req, res) => {
   const { id } = req.params;
   const { date, partySize } = req.query;
-  
+
   if (!date || !partySize) {
     return res.status(400).json({
       success: false,
       message: 'Date and party size are required'
     });
   }
-  
+
   // Demo availability data
   const availableSlots = [
     { time: '12:00', available: true },
@@ -461,7 +461,7 @@ app.get('/api/restaurants/:id/availability', (req, res) => {
     { time: '20:00', available: true },
     { time: '21:00', available: true }
   ];
-  
+
   res.json({
     success: true,
     date,
@@ -473,9 +473,9 @@ app.get('/api/restaurants/:id/availability', (req, res) => {
 // Auth route - send OTP
 app.post('/api/auth/send-otp', (req, res) => {
   const { phoneNumber } = req.body;
-  
+
   console.log(`[DEMO] Sending OTP to ${phoneNumber}. In demo mode, OTP is always 1234`);
-  
+
   res.json({
     success: true,
     message: 'OTP sent successfully',
@@ -486,16 +486,16 @@ app.post('/api/auth/send-otp', (req, res) => {
 // Auth route - verify OTP
 app.post('/api/auth/verify-otp', (req, res) => {
   const { phoneNumber, otp } = req.body;
-  
+
   if (otp !== '1234') {
     return res.status(400).json({
       success: false,
       message: 'Invalid OTP. For demo, use 1234'
     });
   }
-  
+
   console.log(`[DEMO] OTP verification successful for ${phoneNumber}`);
-  
+
   // Demo user
   const user = {
     id: '12345',
@@ -504,7 +504,7 @@ app.post('/api/auth/verify-otp', (req, res) => {
     email: 'demo@example.com',
     createdAt: new Date()
   };
-  
+
   res.json({
     success: true,
     message: 'OTP verified successfully',
