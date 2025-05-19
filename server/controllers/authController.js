@@ -229,16 +229,21 @@ exports.adminLogin = async (req, res) => {
 
     // Demo credentials
     const demoAdmin = {
+      id: 'admin123',
       email: 'admin@test.com',
-      password: 'admin123'
+      password: 'admin123',
+      role: 'admin'
     };
 
     if (email === demoAdmin.email && password === demoAdmin.password) {
+      const token = generateToken(demoAdmin.id);
+      
       return res.status(200).json({
         success: true,
         message: 'Login successful',
+        token,
         user: {
-          role: 'admin',
+          role: demoAdmin.role,
           email: demoAdmin.email
         }
       });

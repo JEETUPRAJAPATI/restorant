@@ -73,9 +73,12 @@
 
                 const data = await response.json();
                 if (data.success) {
+                    // Store token and user data
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
                     window.location.href = '/admin-dashboard.html';
                 } else {
-                    alert('Invalid credentials');
+                    alert(data.message || 'Invalid credentials');
                 }
             } catch (error) {
                 alert('Login failed');
