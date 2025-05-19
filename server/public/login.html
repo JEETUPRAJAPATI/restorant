@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - TableFete</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #E91E63, #7C4DFF);
+            color: white;
+            padding: 1rem 0;
+            width: 100%;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            color: #E91E63;
+            font-size: 20px;
+        }
+        
+        .logo-text {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+            font-weight: 500;
+            font-size: 14px;
+            padding: 8px 12px;
+            border-radius: 20px;
+        }
+        
+        .nav-link:hover {
+            opacity: 1;
+            background-color: rgba(255,255,255,0.1);
+        }
+        
+        .nav-link.active {
+            background-color: rgba(255,255,255,0.2);
+            opacity: 1;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 0;
+        }
+        
+        .auth-container {
+            max-width: 450px;
+            width: 100%;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .auth-header {
+            background: linear-gradient(135deg, #E91E63, #7C4DFF);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .auth-header h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .auth-header p {
+            opacity: 0.8;
+            font-size: 14px;
+        }
+        
+        .auth-body {
+            padding: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #E91E63;
+            box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.1);
+        }
+        
+        .phone-input-container {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .country-code {
+            width: 30%;
+            background-color: #f9f9f9;
+        }
+        
+        .phone-number {
+            width: 70%;
+        }
+        
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            background-color: #E91E63;
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background-color: #D81B60;
+            transform: translateY(-2px);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn:disabled {
+            background-color: #ddd;
+            color: #999;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .auth-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .auth-footer a {
+            color: #E91E63;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .otp-container {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .otp-input {
+            width: 45px;
+            height: 55px;
+            font-size: 24px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        
+        .otp-input:focus {
+            outline: none;
+            border-color: #E91E63;
+            box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.1);
+        }
+        
+        .resend-link {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        
+        .resend-link a {
+            color: #E91E63;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .error-message {
+            color: #F44336;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .success-message {
+            color: #4CAF50;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .timer {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .loader {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+            display: none;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* States */
+        .login-form {
+            display: block;
+        }
+        
+        .otp-form {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .auth-container {
+                max-width: 95%;
+            }
+        }
+    </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">🍽️</div>
+                    <div class="logo-text">TableFete</div>
+                </div>
+                <div class="nav-links">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="filter.html" class="nav-link">Find Venue</a>
+                    <a href="restaurants.html" class="nav-link">Restaurants</a>
+                    <a href="login.html" class="nav-link active">Login</a>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <main>
+        <div class="auth-container">
+            <div class="auth-header">
+                <h2>Login to TableFete</h2>
+                <p>Enter your phone number to get started</p>
+            </div>
+            
+            <div class="auth-body">
+                <!-- Login Form -->
+                <form id="login-form" class="login-form">
+                    <div class="form-group">
+                        <label class="form-label">Phone Number</label>
+                        <div class="phone-input-container">
+                            <select class="form-control country-code" id="country-code">
+                                <option value="+1">+1 (US)</option>
+                                <option value="+44">+44 (UK)</option>
+                                <option value="+91">+91 (IN)</option>
+                                <option value="+61">+61 (AU)</option>
+                                <option value="+86">+86 (CN)</option>
+                            </select>
+                            <input type="tel" class="form-control phone-number" id="phone-number" placeholder="Enter phone number" required>
+                        </div>
+                        <div class="error-message" id="phone-error"></div>
+                    </div>
+                    
+                    <button type="submit" id="send-otp-btn" class="btn">
+                        <span class="loader" id="login-loader"></span>
+                        <span id="login-btn-text">Send Verification Code</span>
+                    </button>
+                    
+                    <div class="auth-footer">
+                        Don't have an account? <a href="signup.html">Sign Up</a>
+                    </div>
+                </form>
+                
+                <!-- OTP Verification Form -->
+                <form id="otp-form" class="otp-form">
+                    <div class="form-group">
+                        <label class="form-label">Verification Code</label>
+                        <p style="font-size: 14px; color: #666; margin-bottom: 15px;">
+                            We've sent a 4-digit code to <span id="masked-phone"></span>
+                        </p>
+                        
+                        <div class="otp-container">
+                            <input type="text" class="otp-input" maxlength="1" id="otp-1" autocomplete="off">
+                            <input type="text" class="otp-input" maxlength="1" id="otp-2" autocomplete="off">
+                            <input type="text" class="otp-input" maxlength="1" id="otp-3" autocomplete="off">
+                            <input type="text" class="otp-input" maxlength="1" id="otp-4" autocomplete="off">
+                        </div>
+                        
+                        <div class="error-message" id="otp-error"></div>
+                        <div class="success-message" id="otp-success"></div>
+                        
+                        <div class="resend-link">
+                            <span class="timer" id="resend-timer">Resend code in <span id="timer-countdown">01:00</span></span>
+                            <a href="#" id="resend-link" style="display: none;">Resend Code</a>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" id="verify-otp-btn" class="btn">
+                        <span class="loader" id="verify-loader"></span>
+                        <span id="verify-btn-text">Verify</span>
+                    </button>
+                    
+                    <button type="button" id="back-btn" class="btn" style="background-color: #f5f5f5; color: #333; margin-top: 10px;">
+                        Back
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elements
+            const loginForm = document.getElementById('login-form');
+            const otpForm = document.getElementById('otp-form');
+            const phoneNumber = document.getElementById('phone-number');
+            const countryCode = document.getElementById('country-code');
+            const phoneError = document.getElementById('phone-error');
+            const maskedPhone = document.getElementById('masked-phone');
+            const otpInputs = [
+                document.getElementById('otp-1'),
+                document.getElementById('otp-2'),
+                document.getElementById('otp-3'),
+                document.getElementById('otp-4')
+            ];
+            const otpError = document.getElementById('otp-error');
+            const otpSuccess = document.getElementById('otp-success');
+            const resendTimer = document.getElementById('resend-timer');
+            const resendLink = document.getElementById('resend-link');
+            const timerCountdown = document.getElementById('timer-countdown');
+            const backBtn = document.getElementById('back-btn');
+            const sendOtpBtn = document.getElementById('send-otp-btn');
+            const verifyOtpBtn = document.getElementById('verify-otp-btn');
+            const loginLoader = document.getElementById('login-loader');
+            const loginBtnText = document.getElementById('login-btn-text');
+            const verifyLoader = document.getElementById('verify-loader');
+            const verifyBtnText = document.getElementById('verify-btn-text');
+            
+            // Store phone for later use
+            let currentPhone = '';
+            
+            // Login form submission
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Validate phone number
+                const phone = phoneNumber.value.trim();
+                const code = countryCode.value;
+                
+                if (!phone) {
+                    phoneError.textContent = 'Please enter your phone number';
+                    phoneError.style.display = 'block';
+                    return;
+                }
+                
+                // Show loading state
+                sendOtpBtn.disabled = true;
+                loginLoader.style.display = 'inline-block';
+                loginBtnText.textContent = 'Sending...';
+                
+                // Get full phone number
+                currentPhone = code + phone;
+                
+                // Call API to send OTP
+                fetch('/api/auth/send-otp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ phoneNumber: currentPhone })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Mask phone number for display
+                        const masked = maskPhoneNumber(currentPhone);
+                        maskedPhone.textContent = masked;
+                        
+                        // Show OTP form
+                        loginForm.style.display = 'none';
+                        otpForm.style.display = 'block';
+                        
+                        // Set focus on first OTP input
+                        otpInputs[0].focus();
+                        
+                        // Start countdown timer
+                        startResendTimer();
+                        
+                        // For demo, show the OTP
+                        if (data.dummyOTP) {
+                            otpSuccess.textContent = `For demo purposes, the OTP is: ${data.dummyOTP}`;
+                            otpSuccess.style.display = 'block';
+                        }
+                    } else {
+                        phoneError.textContent = data.message || 'Failed to send verification code';
+                        phoneError.style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    phoneError.textContent = 'An error occurred. Please try again.';
+                    phoneError.style.display = 'block';
+                })
+                .finally(() => {
+                    // Reset loading state
+                    sendOtpBtn.disabled = false;
+                    loginLoader.style.display = 'none';
+                    loginBtnText.textContent = 'Send Verification Code';
+                });
+            });
+            
+            // OTP input behavior
+            otpInputs.forEach((input, index) => {
+                // Auto focus next input
+                input.addEventListener('input', function() {
+                    if (this.value.length === this.maxLength) {
+                        if (index < otpInputs.length - 1) {
+                            otpInputs[index + 1].focus();
+                        }
+                    }
+                });
+                
+                // Handle backspace
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Backspace' && !this.value && index > 0) {
+                        otpInputs[index - 1].focus();
+                    }
+                });
+                
+                // Allow only numbers
+                input.addEventListener('input', function() {
+                    this.value = this.value.replace(/[^0-9]/g, '');
+                });
+            });
+            
+            // OTP form submission
+            otpForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Get OTP
+                const otp = otpInputs.map(input => input.value).join('');
+                
+                if (otp.length !== 4) {
+                    otpError.textContent = 'Please enter the complete 4-digit code';
+                    otpError.style.display = 'block';
+                    return;
+                }
+                
+                // Show loading state
+                verifyOtpBtn.disabled = true;
+                verifyLoader.style.display = 'inline-block';
+                verifyBtnText.textContent = 'Verifying...';
+                
+                // Call API to verify OTP
+                fetch('/api/auth/verify-otp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ phoneNumber: currentPhone, otp })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Clear errors
+                        otpError.style.display = 'none';
+                        
+                        // Show success message
+                        otpSuccess.textContent = 'Verification successful!';
+                        otpSuccess.style.display = 'block';
+                        
+                        // Store token in localStorage
+                        if (data.token) {
+                            localStorage.setItem('authToken', data.token);
+                        }
+                        
+                        // Check if registered
+                        if (data.isRegistered) {
+                            // Redirect to home or previous page
+                            setTimeout(() => {
+                                window.location.href = 'index.html';
+                            }, 1500);
+                        } else {
+                            // Redirect to complete registration
+                            setTimeout(() => {
+                                window.location.href = `signup.html?phone=${encodeURIComponent(currentPhone)}`;
+                            }, 1500);
+                        }
+                    } else {
+                        otpError.textContent = data.message || 'Invalid verification code';
+                        otpError.style.display = 'block';
+                        
+                        // Reset all OTP inputs
+                        otpInputs.forEach(input => {
+                            input.value = '';
+                        });
+                        otpInputs[0].focus();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    otpError.textContent = 'An error occurred. Please try again.';
+                    otpError.style.display = 'block';
+                })
+                .finally(() => {
+                    // Reset loading state
+                    verifyOtpBtn.disabled = false;
+                    verifyLoader.style.display = 'none';
+                    verifyBtnText.textContent = 'Verify';
+                });
+            });
+            
+            // Back button
+            backBtn.addEventListener('click', function() {
+                loginForm.style.display = 'block';
+                otpForm.style.display = 'none';
+                
+                // Reset OTP form
+                otpInputs.forEach(input => {
+                    input.value = '';
+                });
+                otpError.style.display = 'none';
+                otpSuccess.style.display = 'none';
+            });
+            
+            // Resend link
+            resendLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Hide resend link
+                resendLink.style.display = 'none';
+                resendTimer.style.display = 'inline-block';
+                
+                // Call API to resend OTP
+                fetch('/api/auth/send-otp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ phoneNumber: currentPhone })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Show success message
+                        otpSuccess.textContent = 'Verification code resent!';
+                        otpSuccess.style.display = 'block';
+                        
+                        // Start countdown timer
+                        startResendTimer();
+                        
+                        // For demo, show the OTP
+                        if (data.dummyOTP) {
+                            otpSuccess.textContent += ` For demo purposes, the OTP is: ${data.dummyOTP}`;
+                        }
+                    } else {
+                        otpError.textContent = data.message || 'Failed to resend verification code';
+                        otpError.style.display = 'block';
+                        
+                        // Show resend link again
+                        resendLink.style.display = 'inline-block';
+                        resendTimer.style.display = 'none';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    otpError.textContent = 'An error occurred. Please try again.';
+                    otpError.style.display = 'block';
+                    
+                    // Show resend link again
+                    resendLink.style.display = 'inline-block';
+                    resendTimer.style.display = 'none';
+                });
+            });
+            
+            // Helper function to mask phone number
+            function maskPhoneNumber(phone) {
+                if (phone.length <= 4) return phone;
+                const lastFour = phone.slice(-4);
+                return `***-***-${lastFour}`;
+            }
+            
+            // Helper function to start resend timer
+            function startResendTimer() {
+                let seconds = 60;
+                resendTimer.style.display = 'inline-block';
+                resendLink.style.display = 'none';
+                
+                const interval = setInterval(function() {
+                    seconds--;
+                    
+                    if (seconds <= 0) {
+                        clearInterval(interval);
+                        resendTimer.style.display = 'none';
+                        resendLink.style.display = 'inline-block';
+                        return;
+                    }
+                    
+                    const minutes = Math.floor(seconds / 60);
+                    const remainingSeconds = seconds % 60;
+                    timerCountdown.textContent = `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+                }, 1000);
+            }
+            
+            // Auto-focus between OTP inputs
+            for (let i = 0; i < otpInputs.length; i++) {
+                otpInputs[i].addEventListener('keyup', function(e) {
+                    // If input has value and it's not the last input, focus next
+                    if (this.value.length === 1 && i !== otpInputs.length - 1) {
+                        otpInputs[i + 1].focus();
+                    }
+                    // If backspace is pressed and input is empty, focus previous
+                    else if (e.key === 'Backspace' && !this.value && i !== 0) {
+                        otpInputs[i - 1].focus();
+                    }
+                });
+            }
+            
+            // Check if user is already logged in
+            const authToken = localStorage.getItem('authToken');
+            if (authToken) {
+                // Check if there's a redirect URL in localStorage
+                const redirectUrl = localStorage.getItem('redirectAfterLogin');
+                if (redirectUrl) {
+                    localStorage.removeItem('redirectAfterLogin');
+                    window.location.href = redirectUrl;
+                } else {
+                    // Redirect to previous page or home
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const redirect = urlParams.get('redirect');
+                    
+                    if (redirect) {
+                        window.location.href = redirect;
+                    } else {
+                        window.location.href = 'index.html';
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

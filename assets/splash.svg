@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1242 2436">
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E91E63" />
+      <stop offset="100%" stop-color="#7C4DFF" />
+    </linearGradient>
+  </defs>
+  
+  <rect width="1242" height="2436" fill="#FFFFFF" />
+  
+  <g transform="translate(621, 1150)">
+    <!-- Background circle -->
+    <circle cx="0" cy="0" r="300" fill="url(#gradient)" />
+    
+    <!-- Plate -->
+    <circle cx="0" cy="20" r="180" fill="rgba(255, 255, 255, 0.9)" />
+    <circle cx="0" cy="20" r="160" fill="transparent" stroke="rgba(255, 255, 255, 0.7)" stroke-width="3" />
+    
+    <!-- Utensils -->
+    <path d="M-90,-100 L-100,130 C-100,140 -90,150 -80,150 C-70,150 -60,140 -60,130 L-70,-100 Z" fill="#FFFFFF" />
+    <path d="M-40,-100 L-40,-70 C-40,-60 -40,-50 -50,-40 C-60,-30 -60,-20 -60,-10 L-60,130 C-60,140 -50,150 -40,150 C-30,150 -20,140 -20,130 L-20,-10 C-20,-20 -20,-30 -10,-40 C0,-50 0,-60 0,-70 L0,-100 C0,-110 -10,-120 -20,-120 C-30,-120 -40,-110 -40,-100 Z" fill="#FFFFFF" />
+    <path d="M80,-120 C50,-120 25,-95 25,-65 L25,130 C25,140 35,150 45,150 C55,150 65,140 65,130 L65,70 L80,70 C110,70 135,45 135,15 L135,-65 C135,-95 110,-120 80,-120 Z M95,15 C95,30 85,40 80,40 L65,40 L65,-65 C65,-80 75,-90 80,-90 C85,-90 95,-80 95,-65 L95,15 Z" fill="#FFFFFF" />
+    
+    <!-- Party elements -->
+    <circle cx="-60" cy="-130" r="10" fill="#FFFFFF" />
+    <circle cx="-10" cy="-160" r="14" fill="#FFFFFF" />
+    <circle cx="120" cy="-140" r="8" fill="#FFFFFF" />
+    <circle cx="130" cy="-180" r="12" fill="#FFFFFF" />
+    <circle cx="-120" cy="-90" r="6" fill="#FFFFFF" />
+    <path d="M140,-160 L170,-190 M140,-190 L170,-160" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" />
+    <path d="M-120,-170 L-90,-200 M-120,-200 L-90,-170" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" />
+    <path d="M20,-200 L40,-220 M20,-220 L40,-200" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" />
+  </g>
+  
+  <!-- App Name -->
+  <text x="621" y="1550" font-family="Arial" font-size="70" font-weight="bold" text-anchor="middle" fill="#333333">TableFete</text>
+  
+  <!-- Tagline -->
+  <text x="621" y="1620" font-family="Arial" font-size="40" text-anchor="middle" fill="#666666">Celebrate Anywhere</text>
+</svg>

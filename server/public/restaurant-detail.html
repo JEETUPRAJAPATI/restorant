@@ -1,0 +1,2193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Details - TableFete</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #E91E63, #7C4DFF);
+            color: white;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            color: #E91E63;
+            font-size: 20px;
+        }
+        
+        .logo-text {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+            font-weight: 500;
+            font-size: 14px;
+            padding: 8px 12px;
+            border-radius: 20px;
+        }
+        
+        .nav-link:hover {
+            opacity: 1;
+            background-color: rgba(255,255,255,0.1);
+        }
+        
+        .nav-link.active {
+            background-color: rgba(255,255,255,0.2);
+            opacity: 1;
+        }
+
+        main {
+            padding-top: 80px;
+            padding-bottom: 40px;
+            min-height: 100vh;
+        }
+        
+        .breadcrumbs {
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .breadcrumbs a {
+            color: #E91E63;
+            text-decoration: none;
+        }
+        
+        .breadcrumbs a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Image Gallery / Carousel */
+        .gallery-section {
+            margin-bottom: 40px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        
+        .carousel {
+            position: relative;
+            height: 400px;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .carousel-inner {
+            display: flex;
+            height: 100%;
+            transition: transform 0.5s ease-in-out;
+        }
+        
+        .carousel-item {
+            min-width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .carousel-control {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #333;
+            cursor: pointer;
+            border: none;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+        
+        .carousel-control:hover {
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .carousel-control.prev {
+            left: 20px;
+        }
+        
+        .carousel-control.next {
+            right: 20px;
+        }
+        
+        .carousel-indicators {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .carousel-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .carousel-indicator.active {
+            background-color: white;
+            transform: scale(1.2);
+        }
+        
+        /* Restaurant Info */
+        .restaurant-info-section {
+            margin-bottom: 40px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease-out forwards;
+            animation-delay: 0.2s;
+        }
+        
+        .restaurant-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+        
+        .restaurant-title {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .restaurant-subtitle {
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        
+        .restaurant-rating {
+            color: #FFC107;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+        
+        .restaurant-rating span {
+            color: #666;
+            margin-left: 5px;
+        }
+        
+        .book-now-btn {
+            padding: 12px 25px;
+            background-color: #E91E63;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(233, 30, 99, 0.3);
+        }
+        
+        .book-now-btn:hover {
+            background-color: #C2185B;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(233, 30, 99, 0.4);
+        }
+        
+        .restaurant-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .detail-column h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #E91E63;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .detail-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background-color: #E91E63;
+            border-radius: 3px;
+        }
+        
+        .info-list {
+            list-style: none;
+        }
+        
+        .info-list li {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .info-list li i {
+            margin-right: 10px;
+            color: #E91E63;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .feature-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .feature-tag {
+            background-color: #f0f0f0;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 13px;
+            color: #666;
+            display: flex;
+            align-items: center;
+        }
+        
+        .feature-tag i {
+            margin-right: 5px;
+            color: #E91E63;
+        }
+        
+        /* Tabs Navigation */
+        .content-tabs {
+            margin-bottom: 40px;
+            position: relative;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease-out forwards;
+            animation-delay: 0.4s;
+        }
+        
+        .tabs-nav {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+            position: sticky;
+            top: 70px;
+            background-color: #f5f5f5;
+            z-index: 90;
+            padding: 10px 0;
+        }
+        
+        .tab-btn {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            font-size: 16px;
+            font-weight: 500;
+            color: #666;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-btn::after {
+            content: '';
+            position: absolute;
+            bottom: -11px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-btn:hover {
+            color: #333;
+        }
+        
+        .tab-btn.active {
+            color: #E91E63;
+        }
+        
+        .tab-btn.active::after {
+            background-color: #E91E63;
+        }
+        
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Menu Tab */
+        .menu-categories {
+            margin-bottom: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .menu-category {
+            padding: 8px 16px;
+            background-color: #f0f0f0;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-category:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .menu-category.active {
+            background-color: #E91E63;
+            color: white;
+        }
+        
+        .menu-list {
+            margin-bottom: 30px;
+        }
+        
+        .menu-category-title {
+            font-size: 20px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .menu-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+        
+        .menu-item {
+            background-color: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+        
+        .menu-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .menu-item-image {
+            width: 70px;
+            height: 70px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .menu-item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .menu-item-info {
+            flex-grow: 1;
+        }
+        
+        .menu-item-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .menu-item-desc {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        
+        .menu-item-price {
+            font-weight: bold;
+            color: #E91E63;
+        }
+        
+        .menu-item-tags {
+            display: flex;
+            gap: 5px;
+            margin-top: 5px;
+        }
+        
+        .menu-item-tag {
+            font-size: 11px;
+            padding: 2px 6px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            color: #666;
+        }
+        
+        /* Platters Tab */
+        .platters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+        }
+        
+        .ai-recommendation {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #FCE4EC, #F3E5F5);
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ai-recommendation::before {
+            content: 'AI Recommended';
+            position: absolute;
+            top: 10px;
+            right: -30px;
+            background-color: #E91E63;
+            color: white;
+            padding: 5px 40px;
+            font-size: 12px;
+            transform: rotate(45deg);
+            font-weight: bold;
+        }
+        
+        .ai-recommendation h3 {
+            font-size: 22px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .ai-recommendation p {
+            margin-bottom: 15px;
+            font-size: 15px;
+            color: #555;
+        }
+        
+        .platter-card {
+            background-color: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .platter-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .platter-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .platter-content {
+            padding: 20px;
+        }
+        
+        .platter-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .platter-desc {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .platter-details {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .platter-price {
+            font-size: 18px;
+            font-weight: bold;
+            color: #E91E63;
+        }
+        
+        .platter-serves {
+            display: flex;
+            align-items: center;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .platter-serves i {
+            margin-right: 5px;
+            color: #E91E63;
+        }
+        
+        .platter-items {
+            margin-bottom: 15px;
+        }
+        
+        .platter-items h4 {
+            font-size: 15px;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        
+        .platter-items ul {
+            list-style: none;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .platter-items li {
+            margin-bottom: 5px;
+            position: relative;
+            padding-left: 15px;
+        }
+        
+        .platter-items li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #E91E63;
+        }
+        
+        .select-platter-btn {
+            width: 100%;
+            padding: 12px 0;
+            background-color: #E91E63;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .select-platter-btn:hover {
+            background-color: #C2185B;
+        }
+        
+        /* Add-ons Tab */
+        .addons-section {
+            margin-bottom: 30px;
+        }
+        
+        .addons-title {
+            font-size: 20px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            color: #333;
+        }
+        
+        .addons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .addon-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .addon-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .addon-checkbox {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        
+        .addon-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            padding-right: 30px;
+        }
+        
+        .addon-desc {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 12px;
+        }
+        
+        .addon-price {
+            font-weight: bold;
+            color: #E91E63;
+        }
+        
+        /* Custom Platter Builder Tab */
+        .builder-section {
+            margin-bottom: 30px;
+        }
+        
+        .builder-section h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .builder-section p {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .building-area {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .items-panel {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .platter-panel {
+            background-color: #FCE4EC;
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 300px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .panel-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+        
+        .item-categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .item-category {
+            padding: 6px 12px;
+            background-color: #f0f0f0;
+            border-radius: 15px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .item-category:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .item-category.active {
+            background-color: #E91E63;
+            color: white;
+        }
+        
+        .builder-items {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .builder-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .builder-item:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .builder-item-info {
+            flex-grow: 1;
+        }
+        
+        .builder-item-name {
+            font-weight: 500;
+            margin-bottom: 3px;
+        }
+        
+        .builder-item-price {
+            font-size: 13px;
+            color: #E91E63;
+        }
+        
+        .builder-item-quantity {
+            display: flex;
+            align-items: center;
+        }
+        
+        .qty-btn {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background-color: #f0f0f0;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .qty-btn:hover {
+            background-color: #E91E63;
+            color: white;
+        }
+        
+        .qty-input {
+            width: 30px;
+            text-align: center;
+            border: none;
+            outline: none;
+            font-size: 14px;
+            margin: 0 5px;
+        }
+        
+        .selected-items {
+            min-height: 200px;
+        }
+        
+        .selected-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .selected-item-left {
+            display: flex;
+            align-items: center;
+        }
+        
+        .selected-item-name {
+            font-weight: 500;
+            margin-right: 10px;
+        }
+        
+        .selected-item-quantity {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .selected-item-price {
+            font-weight: bold;
+        }
+        
+        .remove-item {
+            color: #F44336;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 5px;
+        }
+        
+        .platter-summary {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px dashed #ccc;
+        }
+        
+        .platter-summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        
+        .platter-summary-row.total {
+            font-weight: bold;
+            font-size: 18px;
+            color: #E91E63;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        .create-platter-btn {
+            display: block;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #E91E63, #7C4DFF);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+        
+        .create-platter-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+        
+        .create-platter-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+        
+        /* Booking Info Tab */
+        .booking-form {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .form-section {
+            margin-bottom: 30px;
+        }
+        
+        .form-section h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 15px;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #E91E63;
+            box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.1);
+        }
+        
+        .radio-group {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .radio-option {
+            display: flex;
+            align-items: center;
+        }
+        
+        .radio-option input {
+            margin-right: 8px;
+        }
+        
+        /* Animation Classes */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes highlight {
+            0% { background-color: transparent; }
+            50% { background-color: rgba(233, 30, 99, 0.1); }
+            100% { background-color: transparent; }
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .restaurant-header {
+                flex-direction: column;
+            }
+            
+            .book-now-btn {
+                margin-top: 20px;
+            }
+            
+            .building-area {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .tabs-nav {
+                overflow-x: auto;
+                white-space: nowrap;
+                padding-bottom: 10px;
+            }
+            
+            .carousel {
+                height: 300px;
+            }
+            
+            .restaurant-details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">🍽️</div>
+                    <div class="logo-text">TableFete</div>
+                </div>
+                <div class="nav-links">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="filter.html" class="nav-link">Find Venue</a>
+                    <a href="restaurants.html" class="nav-link">Restaurants</a>
+                    <a href="#" class="nav-link">My Account</a>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <main>
+        <div class="container">
+            <div class="breadcrumbs">
+                <a href="index.html">Home</a> &gt; 
+                <a href="restaurants.html">Restaurants</a> &gt; 
+                <span id="restaurant-name-breadcrumb">Restaurant Details</span>
+            </div>
+            
+            <!-- Image Gallery Section -->
+            <section class="gallery-section">
+                <div class="carousel">
+                    <div class="carousel-inner" id="carousel-inner">
+                        <!-- Images will be loaded dynamically -->
+                        <div class="carousel-item" style="background-image: url('https://pixabay.com/get/g60792b4e5c0c6cf12caab98004ce568476b8bec7bbbb38c9a3c3da07e9fa9f3036e8b57358926b934fb610d7783fe83c8432bddf3595d41bf36da9ead7cb7e3f_1280.jpg');"></div>
+                    </div>
+                    <button class="carousel-control prev" id="prev-btn">❮</button>
+                    <button class="carousel-control next" id="next-btn">❯</button>
+                    <div class="carousel-indicators" id="carousel-indicators">
+                        <!-- Indicators will be added dynamically -->
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Restaurant Info Section -->
+            <section class="restaurant-info-section">
+                <div class="restaurant-header">
+                    <div>
+                        <h1 class="restaurant-title" id="restaurant-name">Loading...</h1>
+                        <div class="restaurant-subtitle" id="restaurant-subtitle">Loading...</div>
+                        <div class="restaurant-rating" id="restaurant-rating">
+                            Loading...
+                        </div>
+                    </div>
+                    <button class="book-now-btn">Book This Venue</button>
+                </div>
+                
+                <div class="restaurant-details">
+                    <div class="detail-column">
+                        <h3>Information</h3>
+                        <ul class="info-list" id="info-list">
+                            <li><i class="fas fa-map-marker-alt"></i> <span id="restaurant-address">Loading address...</span></li>
+                            <li><i class="fas fa-phone"></i> <span id="restaurant-phone">Loading phone...</span></li>
+                            <li><i class="fas fa-clock"></i> <span id="restaurant-hours">Loading hours...</span></li>
+                            <li><i class="fas fa-utensils"></i> <span id="restaurant-cuisine">Loading cuisine...</span></li>
+                            <li><i class="fas fa-dollar-sign"></i> <span id="restaurant-price">Loading price range...</span></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="detail-column">
+                        <h3>Features</h3>
+                        <div class="feature-list" id="feature-list">
+                            <!-- Features will be added dynamically -->
+                            <div class="feature-tag"><i class="fas fa-spinner fa-spin"></i> Loading...</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Tabs Section -->
+            <section class="content-tabs">
+                <div class="tabs-nav">
+                    <button class="tab-btn active" data-tab="menu">Menu</button>
+                    <button class="tab-btn" data-tab="platters">Recommended Platters</button>
+                    <button class="tab-btn" data-tab="addons">Add-on Services</button>
+                    <button class="tab-btn" data-tab="custom-platter">Build Your Own Platter</button>
+                    <button class="tab-btn" data-tab="booking">Booking Information</button>
+                </div>
+                
+                <!-- Menu Tab Content -->
+                <div class="tab-content active" id="menu-tab">
+                    <div class="menu-categories">
+                        <div class="menu-category active">All</div>
+                        <div class="menu-category">Appetizers</div>
+                        <div class="menu-category">Main Courses</div>
+                        <div class="menu-category">Desserts</div>
+                        <div class="menu-category">Beverages</div>
+                    </div>
+                    
+                    <div class="menu-list">
+                        <h3 class="menu-category-title">Appetizers</h3>
+                        <div class="menu-items">
+                            <div class="menu-item">
+                                <div class="menu-item-image">
+                                    <img src="https://pixabay.com/get/g1c1ead61d2e59c43b7dff0ecda34eec04482e78c273f1151216e66cbbbe21d90f69f3318862885c8b3be60af350f0e0e3cf1d5591d5aa72a1d21463ed029dac0_1280.jpg" alt="Samosas">
+                                </div>
+                                <div class="menu-item-info">
+                                    <div class="menu-item-name">Samosas</div>
+                                    <div class="menu-item-desc">Crispy pastry filled with spiced potatoes and peas.</div>
+                                    <div class="menu-item-price">$6.99</div>
+                                    <div class="menu-item-tags">
+                                        <span class="menu-item-tag">Vegetarian</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="menu-item">
+                                <div class="menu-item-image">
+                                    <img src="https://pixabay.com/get/g45eb5c8e37c42765146e91360dcd53e9370c34e658ba150e6928dcad6a38205daa407126ef154a55040f3a525f24c7cce0a02b681f5e60429f6fcf2694e79dd7_1280.jpg" alt="Spring Rolls">
+                                </div>
+                                <div class="menu-item-info">
+                                    <div class="menu-item-name">Spring Rolls</div>
+                                    <div class="menu-item-desc">Crispy rolls filled with vegetables and served with sweet chili sauce.</div>
+                                    <div class="menu-item-price">$7.99</div>
+                                    <div class="menu-item-tags">
+                                        <span class="menu-item-tag">Vegetarian</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="menu-item">
+                                <div class="menu-item-image">
+                                    <img src="https://pixabay.com/get/g820cf851572c22b72c89209839281e1b00acb2c6a67744045d73c4e8fb0698c486f5c5f6d8f075ac6c8164e4476cc96efaeb221ff83481ea0f82ac11d4920db4_1280.jpg" alt="Chicken Tikka">
+                                </div>
+                                <div class="menu-item-info">
+                                    <div class="menu-item-name">Chicken Tikka</div>
+                                    <div class="menu-item-desc">Tender chicken pieces marinated in yogurt and spices, grilled to perfection.</div>
+                                    <div class="menu-item-price">$9.99</div>
+                                    <div class="menu-item-tags">
+                                        <span class="menu-item-tag">Spicy</span>
+                                        <span class="menu-item-tag">Popular</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="menu-list">
+                        <h3 class="menu-category-title">Main Courses</h3>
+                        <div class="menu-items">
+                            <div class="menu-item">
+                                <div class="menu-item-image">
+                                    <img src="https://pixabay.com/get/gd893f216f3b905c3609204dcbb2651d52a5dd8b24a84b4df24724885ed229a8b986aa13e517066b1ac3d3d04a381d32bc6a523d85907e442420242ed0a754c5b_1280.jpg" alt="Butter Chicken">
+                                </div>
+                                <div class="menu-item-info">
+                                    <div class="menu-item-name">Butter Chicken</div>
+                                    <div class="menu-item-desc">Tender chicken in a rich tomato and butter sauce.</div>
+                                    <div class="menu-item-price">$14.99</div>
+                                    <div class="menu-item-tags">
+                                        <span class="menu-item-tag">Signature</span>
+                                        <span class="menu-item-tag">Popular</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="menu-item">
+                                <div class="menu-item-image">
+                                    <img src="https://pixabay.com/get/g6421df4ec41e20cc527bfbb73cac4b2b3f8445f2e5876d44c08d8046206b5d8acaca0e87c3f83ff1c4d4a366837e9984dc32d59c32b396a179035f76f2cb0518_1280.jpg" alt="Vegetable Biryani">
+                                </div>
+                                <div class="menu-item-info">
+                                    <div class="menu-item-name">Vegetable Biryani</div>
+                                    <div class="menu-item-desc">Fragrant basmati rice cooked with vegetables and aromatic spices.</div>
+                                    <div class="menu-item-price">$12.99</div>
+                                    <div class="menu-item-tags">
+                                        <span class="menu-item-tag">Vegetarian</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="menu-item">
+                                <div class="menu-item-image">
+                                    <img src="https://pixabay.com/get/g94bdec717ee152cf03bbcb146e882df527bbc4334dfea8822e5cb1fb37a091cbfe93b74ef22cec321876afb990cc1b4014178d730c0e0a03535a2b6dd35c03af_1280.jpg" alt="Lamb Rogan Josh">
+                                </div>
+                                <div class="menu-item-info">
+                                    <div class="menu-item-name">Lamb Rogan Josh</div>
+                                    <div class="menu-item-desc">Tender lamb cooked in a rich sauce with Kashmiri chilies.</div>
+                                    <div class="menu-item-price">$16.99</div>
+                                    <div class="menu-item-tags">
+                                        <span class="menu-item-tag">Spicy</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Platters Tab Content -->
+                <div class="tab-content" id="platters-tab">
+                    <div class="ai-recommendation">
+                        <h3>Personalized Recommendation for Your Birthday Party</h3>
+                        <p>Based on your party size (15 people) and budget ($20 per person), we've created this perfect platter combination:</p>
+                        <div class="platter-items">
+                            <h4>Recommended Items:</h4>
+                            <ul>
+                                <li>1x Large Party Platter (serves 15-20 people)</li>
+                                <li>1x Dessert Sampler (serves 10-15 people)</li>
+                                <li>2x Beverage Packages (each serves 8 people)</li>
+                            </ul>
+                        </div>
+                        <div class="platter-details">
+                            <div class="platter-price">Total: $285.96 ($19.06 per person)</div>
+                            <div class="platter-serves"><i class="fas fa-users"></i> Serves 15 people</div>
+                        </div>
+                        <button class="select-platter-btn" id="use-recommendation-btn">Use This Recommendation</button>
+                    </div>
+                    
+                    <div class="platters-grid">
+                        <div class="platter-card">
+                            <div class="platter-image" style="background-image: url('https://pixabay.com/get/g1c1ead61d2e59c43b7dff0ecda34eec04482e78c273f1151216e66cbbbe21d90f69f3318862885c8b3be60af350f0e0e3cf1d5591d5aa72a1d21463ed029dac0_1280.jpg');"></div>
+                            <div class="platter-content">
+                                <h3 class="platter-title">Party Platter Small</h3>
+                                <p class="platter-desc">Perfect for small gatherings of 4-6 people featuring Indian specialties.</p>
+                                <div class="platter-details">
+                                    <div class="platter-price">$49.99</div>
+                                    <div class="platter-serves"><i class="fas fa-users"></i> Serves 5</div>
+                                </div>
+                                <div class="platter-items">
+                                    <h4>Includes:</h4>
+                                    <ul>
+                                        <li>Samosas (10 pcs)</li>
+                                        <li>Chicken Tikka (8 pcs)</li>
+                                        <li>Vegetable Pakoras (12 pcs)</li>
+                                        <li>Butter Naan (5 pcs)</li>
+                                        <li>Mint Chutney & Tamarind Sauce</li>
+                                    </ul>
+                                </div>
+                                <button class="select-platter-btn">Select This Platter</button>
+                            </div>
+                        </div>
+                        
+                        <div class="platter-card">
+                            <div class="platter-image" style="background-image: url('https://pixabay.com/get/g45eb5c8e37c42765146e91360dcd53e9370c34e658ba150e6928dcad6a38205daa407126ef154a55040f3a525f24c7cce0a02b681f5e60429f6fcf2694e79dd7_1280.jpg');"></div>
+                            <div class="platter-content">
+                                <h3 class="platter-title">Party Platter Medium</h3>
+                                <p class="platter-desc">Great for medium-sized events of 8-12 people with a variety of Indian dishes.</p>
+                                <div class="platter-details">
+                                    <div class="platter-price">$89.99</div>
+                                    <div class="platter-serves"><i class="fas fa-users"></i> Serves 10</div>
+                                </div>
+                                <div class="platter-items">
+                                    <h4>Includes:</h4>
+                                    <ul>
+                                        <li>Samosas (15 pcs)</li>
+                                        <li>Chicken Tikka (12 pcs)</li>
+                                        <li>Vegetable Pakoras (20 pcs)</li>
+                                        <li>Butter Chicken (serves 5)</li>
+                                        <li>Vegetable Biryani (serves 5)</li>
+                                        <li>Butter Naan (10 pcs)</li>
+                                        <li>Assorted Chutneys & Sauces</li>
+                                    </ul>
+                                </div>
+                                <button class="select-platter-btn">Select This Platter</button>
+                            </div>
+                        </div>
+                        
+                        <div class="platter-card">
+                            <div class="platter-image" style="background-image: url('https://pixabay.com/get/g820cf851572c22b72c89209839281e1b00acb2c6a67744045d73c4e8fb0698c486f5c5f6d8f075ac6c8164e4476cc96efaeb221ff83481ea0f82ac11d4920db4_1280.jpg');"></div>
+                            <div class="platter-content">
+                                <h3 class="platter-title">Party Platter Large</h3>
+                                <p class="platter-desc">Ideal for large gatherings of 15-20 people with comprehensive menu options.</p>
+                                <div class="platter-details">
+                                    <div class="platter-price">$149.99</div>
+                                    <div class="platter-serves"><i class="fas fa-users"></i> Serves 18</div>
+                                </div>
+                                <div class="platter-items">
+                                    <h4>Includes:</h4>
+                                    <ul>
+                                        <li>Samosas (25 pcs)</li>
+                                        <li>Chicken Tikka (20 pcs)</li>
+                                        <li>Vegetable Pakoras (30 pcs)</li>
+                                        <li>Paneer Tikka (15 pcs)</li>
+                                        <li>Butter Chicken (serves 10)</li>
+                                        <li>Lamb Rogan Josh (serves 10)</li>
+                                        <li>Vegetable Biryani (serves 10)</li>
+                                        <li>Butter Naan (20 pcs)</li>
+                                        <li>Garlic Naan (10 pcs)</li>
+                                        <li>Assorted Chutneys & Sauces</li>
+                                    </ul>
+                                </div>
+                                <button class="select-platter-btn">Select This Platter</button>
+                            </div>
+                        </div>
+                        
+                        <div class="platter-card">
+                            <div class="platter-image" style="background-image: url('https://pixabay.com/get/gd893f216f3b905c3609204dcbb2651d52a5dd8b24a84b4df24724885ed229a8b986aa13e517066b1ac3d3d04a381d32bc6a523d85907e442420242ed0a754c5b_1280.jpg');"></div>
+                            <div class="platter-content">
+                                <h3 class="platter-title">Vegetarian Platter</h3>
+                                <p class="platter-desc">Complete vegetarian option for 8-10 people featuring vegetarian specialties.</p>
+                                <div class="platter-details">
+                                    <div class="platter-price">$79.99</div>
+                                    <div class="platter-serves"><i class="fas fa-users"></i> Serves 9</div>
+                                </div>
+                                <div class="platter-items">
+                                    <h4>Includes:</h4>
+                                    <ul>
+                                        <li>Samosas (20 pcs)</li>
+                                        <li>Vegetable Pakoras (25 pcs)</li>
+                                        <li>Paneer Tikka (15 pcs)</li>
+                                        <li>Vegetable Biryani (serves 9)</li>
+                                        <li>Paneer Butter Masala (serves 9)</li>
+                                        <li>Dal Makhani (serves 9)</li>
+                                        <li>Butter Naan (10 pcs)</li>
+                                        <li>Garlic Naan (8 pcs)</li>
+                                        <li>Assorted Chutneys & Sauces</li>
+                                    </ul>
+                                </div>
+                                <button class="select-platter-btn">Select This Platter</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Add-ons Tab Content -->
+                <div class="tab-content" id="addons-tab">
+                    <div class="addons-section">
+                        <h3 class="addons-title">Entertainment Services</h3>
+                        <div class="addons-grid">
+                            <div class="addon-card">
+                                <input type="checkbox" class="addon-checkbox">
+                                <h4 class="addon-title">Live Music</h4>
+                                <p class="addon-desc">Professional musicians performing for your event. 3-hour performance with a band of 3 members.</p>
+                                <div class="addon-price">$249.99</div>
+                            </div>
+                            
+                            <div class="addon-card">
+                                <input type="checkbox" class="addon-checkbox">
+                                <h4 class="addon-title">DJ Services</h4>
+                                <p class="addon-desc">Professional DJ with sound system for 4 hours, including setup and cleanup.</p>
+                                <div class="addon-price">$199.99</div>
+                            </div>
+                            
+                            <div class="addon-card">
+                                <input type="checkbox" class="addon-checkbox">
+                                <h4 class="addon-title">Dance Floor Setup</h4>
+                                <p class="addon-desc">15'x15' portable dance floor with installation and removal.</p>
+                                <div class="addon-price">$149.99</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="addons-section">
+                        <h3 class="addons-title">Decoration Services</h3>
+                        <div class="addons-grid">
+                            <div class="addon-card">
+                                <input type="checkbox" class="addon-checkbox">
+                                <h4 class="addon-title">Party Decorations</h4>
+                                <p class="addon-desc">Balloons, banners, and themed decor for your event. Includes setup and removal.</p>
+                                <div class="addon-price">$99.99</div>
+                            </div>
+                            
+                            <div class="addon-card">
+                                <input type="checkbox" class="addon-checkbox">
+                                <h4 class="addon-title">Floral Arrangements</h4>
+                                <p class="addon-desc">Fresh flower centerpieces for tables (up to 10 tables) and entrance arrangements.</p>
+                                <div class="addon-price">$149.99</div>
+                            </div>
+                            
+                            <div class="addon-card">
+                                <input type="checkbox" class="addon-checkbox">
+                                <h4 class="addon-title">Premium Lighting</h4>
+                                <p class="addon-desc">Event lighting package with accent lights, uplighting, and spot lighting.</p>
+                                <div class="addon-price">$129.99</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="addons-section">
+                        <h3 class="addons-title">Additional Services</h3>
+                        <div class="addons-grid">
+                            <div class="addon-card">
+                                <input type="checkbox" class="addon-checkbox">
+                                <h4 class="addon-title">Photography Package</h4>
+                                <p class="addon-desc">Professional photographer for 2 hours with edited digital photos provided within 5 days.</p>
+                                <div class="addon-price">$199.99</div>
+                            </div>
+                            
+                            <div class="addon-card">
+                                <input type="checkbox" class="addon-checkbox">
+                                <h4 class="addon-title">Custom Cake</h4>
+                                <p class="addon-desc">Personalized celebration cake with your choice of flavor, serves 20 people.</p>
+                                <div class="addon-price">$49.99</div>
+                            </div>
+                            
+                            <div class="addon-card">
+                                <input type="checkbox" class="addon-checkbox">
+                                <h4 class="addon-title">Event Host</h4>
+                                <p class="addon-desc">Professional event host/emcee to coordinate your celebration activities.</p>
+                                <div class="addon-price">$99.99</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Custom Platter Builder Tab Content -->
+                <div class="tab-content" id="custom-platter-tab">
+                    <div class="builder-section">
+                        <h3>Build Your Own Custom Platter</h3>
+                        <p>Select items from our menu to create a personalized platter that's perfect for your celebration.</p>
+                        
+                        <div class="building-area">
+                            <div class="items-panel">
+                                <h4 class="panel-title">Available Items</h4>
+                                
+                                <div class="item-categories">
+                                    <div class="item-category active">All</div>
+                                    <div class="item-category">Appetizers</div>
+                                    <div class="item-category">Main Courses</div>
+                                    <div class="item-category">Sides</div>
+                                    <div class="item-category">Desserts</div>
+                                </div>
+                                
+                                <div class="builder-items">
+                                    <div class="builder-item">
+                                        <div class="builder-item-info">
+                                            <div class="builder-item-name">Samosas</div>
+                                            <div class="builder-item-price">$1.50 each</div>
+                                        </div>
+                                        <div class="builder-item-quantity">
+                                            <button class="qty-btn minus">-</button>
+                                            <input type="text" class="qty-input" value="0" readonly>
+                                            <button class="qty-btn plus">+</button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="builder-item">
+                                        <div class="builder-item-info">
+                                            <div class="builder-item-name">Chicken Tikka</div>
+                                            <div class="builder-item-price">$2.50 each</div>
+                                        </div>
+                                        <div class="builder-item-quantity">
+                                            <button class="qty-btn minus">-</button>
+                                            <input type="text" class="qty-input" value="0" readonly>
+                                            <button class="qty-btn plus">+</button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="builder-item">
+                                        <div class="builder-item-info">
+                                            <div class="builder-item-name">Vegetable Pakoras</div>
+                                            <div class="builder-item-price">$1.25 each</div>
+                                        </div>
+                                        <div class="builder-item-quantity">
+                                            <button class="qty-btn minus">-</button>
+                                            <input type="text" class="qty-input" value="0" readonly>
+                                            <button class="qty-btn plus">+</button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="builder-item">
+                                        <div class="builder-item-info">
+                                            <div class="builder-item-name">Paneer Tikka</div>
+                                            <div class="builder-item-price">$2.00 each</div>
+                                        </div>
+                                        <div class="builder-item-quantity">
+                                            <button class="qty-btn minus">-</button>
+                                            <input type="text" class="qty-input" value="0" readonly>
+                                            <button class="qty-btn plus">+</button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="builder-item">
+                                        <div class="builder-item-info">
+                                            <div class="builder-item-name">Butter Chicken</div>
+                                            <div class="builder-item-price">$14.99 per serving</div>
+                                        </div>
+                                        <div class="builder-item-quantity">
+                                            <button class="qty-btn minus">-</button>
+                                            <input type="text" class="qty-input" value="0" readonly>
+                                            <button class="qty-btn plus">+</button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="builder-item">
+                                        <div class="builder-item-info">
+                                            <div class="builder-item-name">Vegetable Biryani</div>
+                                            <div class="builder-item-price">$12.99 per serving</div>
+                                        </div>
+                                        <div class="builder-item-quantity">
+                                            <button class="qty-btn minus">-</button>
+                                            <input type="text" class="qty-input" value="0" readonly>
+                                            <button class="qty-btn plus">+</button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="builder-item">
+                                        <div class="builder-item-info">
+                                            <div class="builder-item-name">Butter Naan</div>
+                                            <div class="builder-item-price">$2.50 each</div>
+                                        </div>
+                                        <div class="builder-item-quantity">
+                                            <button class="qty-btn minus">-</button>
+                                            <input type="text" class="qty-input" value="0" readonly>
+                                            <button class="qty-btn plus">+</button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="builder-item">
+                                        <div class="builder-item-info">
+                                            <div class="builder-item-name">Garlic Naan</div>
+                                            <div class="builder-item-price">$2.99 each</div>
+                                        </div>
+                                        <div class="builder-item-quantity">
+                                            <button class="qty-btn minus">-</button>
+                                            <input type="text" class="qty-input" value="0" readonly>
+                                            <button class="qty-btn plus">+</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="platter-panel">
+                                <h4 class="panel-title">Your Custom Platter</h4>
+                                
+                                <div class="selected-items" id="selected-items">
+                                    <!-- Selected items will appear here -->
+                                    <div id="empty-platter-message" style="color: #666; padding: 30px 0; text-align: center;">
+                                        Your platter is empty! Select items from the left panel to add them to your custom platter.
+                                    </div>
+                                </div>
+                                
+                                <div class="platter-summary" id="platter-summary" style="display: none;">
+                                    <div class="platter-summary-row">
+                                        <span>Items:</span>
+                                        <span id="items-count">0</span>
+                                    </div>
+                                    <div class="platter-summary-row">
+                                        <span>Estimated Servings:</span>
+                                        <span id="servings-count">0</span>
+                                    </div>
+                                    <div class="platter-summary-row total">
+                                        <span>Total:</span>
+                                        <span id="total-price">$0.00</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="create-platter-btn" disabled id="create-platter-btn">Create Custom Platter</button>
+                    </div>
+                </div>
+                
+                <!-- Booking Information Tab Content -->
+                <div class="tab-content" id="booking-tab">
+                    <div class="booking-form">
+                        <div class="form-section">
+                            <h3>Event Details</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Event Type</label>
+                                    <select class="form-control">
+                                        <option value="">Select event type</option>
+                                        <option value="birthday">Birthday</option>
+                                        <option value="anniversary">Anniversary</option>
+                                        <option value="corporate">Corporate</option>
+                                        <option value="wedding">Wedding</option>
+                                        <option value="casual">Casual Gathering</option>
+                                        <option value="graduation">Graduation</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Number of Guests</label>
+                                    <select class="form-control">
+                                        <option value="">Select number of guests</option>
+                                        <option value="1-10">1-10 people</option>
+                                        <option value="11-20">11-20 people</option>
+                                        <option value="21-50">21-50 people</option>
+                                        <option value="51-100">51-100 people</option>
+                                        <option value="100+">100+ people</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Event Date</label>
+                                    <input type="date" class="form-control" min="2023-01-01">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Event Time</label>
+                                    <input type="time" class="form-control">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Special Requests</label>
+                                <textarea class="form-control" rows="3" placeholder="Any special requests or arrangements needed for your event..."></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h3>Service Type</h3>
+                            <div class="form-group">
+                                <div class="radio-group">
+                                    <label class="radio-option">
+                                        <input type="radio" name="service-type" value="dine-in" checked> Dine-in at Restaurant
+                                    </label>
+                                    <label class="radio-option">
+                                        <input type="radio" name="service-type" value="delivery"> Delivery to Your Location
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group" id="delivery-address-group" style="display: none;">
+                                <label class="form-label">Delivery Address</label>
+                                <textarea class="form-control" rows="2" placeholder="Enter your complete delivery address..."></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h3>Payment Options</h3>
+                            <div class="form-group">
+                                <div class="radio-group">
+                                    <label class="radio-option">
+                                        <input type="radio" name="payment-type" value="now" checked> Pay Now
+                                    </label>
+                                    <label class="radio-option">
+                                        <input type="radio" name="payment-type" value="later"> Pay Later at Venue
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="create-platter-btn">Continue to Payment</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load restaurant details
+            loadRestaurantDetails();
+            
+            // Add event listeners for recommendation buttons
+            setupRecommendationButtons();
+            
+            // Tab navigation
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Update active tab button
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Update active tab content
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    document.getElementById(`${tabId}-tab`).classList.add('active');
+                    
+                    // Add entrance animation
+                    document.getElementById(`${tabId}-tab`).style.animation = 'none';
+                    setTimeout(() => {
+                        document.getElementById(`${tabId}-tab`).style.animation = 'fadeIn 0.5s ease';
+                    }, 10);
+                });
+            });
+            
+            // Image carousel functionality
+            const carousel = document.querySelector('.carousel-inner');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const indicators = document.getElementById('carousel-indicators');
+            let currentIndex = 0;
+            let totalSlides = 1;
+            
+            function updateCarousel() {
+                carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
+                
+                // Update indicators
+                document.querySelectorAll('.carousel-indicator').forEach((indicator, index) => {
+                    if (index === currentIndex) {
+                        indicator.classList.add('active');
+                    } else {
+                        indicator.classList.remove('active');
+                    }
+                });
+            }
+            
+            prevBtn.addEventListener('click', function() {
+                currentIndex = (currentIndex > 0) ? currentIndex - 1 : totalSlides - 1;
+                updateCarousel();
+            });
+            
+            nextBtn.addEventListener('click', function() {
+                currentIndex = (currentIndex < totalSlides - 1) ? currentIndex + 1 : 0;
+                updateCarousel();
+            });
+            
+            // Book this Venue button functionality
+            document.querySelector('.book-now-btn').addEventListener('click', function() {
+                // Check if user is logged in
+                const authToken = localStorage.getItem('authToken');
+                
+                if (!authToken) {
+                    // User is not logged in, show confirmation dialog
+                    if (confirm('You need to log in to book this venue. Would you like to login or sign up now?')) {
+                        // Store current page URL to redirect back after login
+                        localStorage.setItem('redirectAfterLogin', window.location.href);
+                        
+                        // Redirect to login page
+                        window.location.href = 'login.html';
+                    }
+                    return;
+                }
+                
+                // User is logged in, scroll to booking tab and activate it
+                const bookingTab = document.querySelector('.tab-btn[data-tab="booking"]');
+                bookingTab.click();
+                bookingTab.scrollIntoView({ behavior: 'smooth' });
+            });
+            
+            // Menu category filtering
+            const menuCategories = document.querySelectorAll('.menu-category');
+            
+            menuCategories.forEach(category => {
+                category.addEventListener('click', function() {
+                    menuCategories.forEach(cat => cat.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Filter menu items based on category
+                    const categoryName = this.textContent.trim();
+                    filterMenuItems(categoryName);
+                });
+            });
+            
+            function filterMenuItems(category) {
+                const menuLists = document.querySelectorAll('.menu-list');
+                
+                if (category === 'All') {
+                    // Show all menu lists
+                    menuLists.forEach(list => list.style.display = 'block');
+                } else {
+                    // Hide all lists first
+                    menuLists.forEach(list => list.style.display = 'none');
+                    
+                    // Show only the matching category
+                    // Case-insensitive search
+                    for (const list of menuLists) {
+                        const title = list.querySelector('.menu-category-title');
+                        if (title && title.textContent.trim().toLowerCase() === category.toLowerCase()) {
+                            list.style.display = 'block';
+                        }
+                    }
+                }
+            }
+            
+            // Custom platter builder functionality
+            const builderItems = document.querySelectorAll('.builder-item');
+            const selectedItemsContainer = document.getElementById('selected-items');
+            const emptyPlatterMessage = document.getElementById('empty-platter-message');
+            const platterSummary = document.getElementById('platter-summary');
+            const itemsCount = document.getElementById('items-count');
+            const servingsCount = document.getElementById('servings-count');
+            const totalPrice = document.getElementById('total-price');
+            const createPlatterBtn = document.getElementById('create-platter-btn');
+            
+            let selectedItems = [];
+            
+            builderItems.forEach(item => {
+                const minusBtn = item.querySelector('.minus');
+                const plusBtn = item.querySelector('.plus');
+                const qtyInput = item.querySelector('.qty-input');
+                const itemName = item.querySelector('.builder-item-name').textContent;
+                const itemPrice = parseFloat(item.querySelector('.builder-item-price').textContent.replace('$', '').split(' ')[0]);
+                
+                minusBtn.addEventListener('click', function() {
+                    let qty = parseInt(qtyInput.value);
+                    if (qty > 0) {
+                        qty--;
+                        qtyInput.value = qty;
+                        updateSelectedItem(itemName, qty, itemPrice);
+                    }
+                });
+                
+                plusBtn.addEventListener('click', function() {
+                    let qty = parseInt(qtyInput.value);
+                    qty++;
+                    qtyInput.value = qty;
+                    updateSelectedItem(itemName, qty, itemPrice);
+                });
+            });
+            
+            function updateSelectedItem(name, quantity, price) {
+                const existingItemIndex = selectedItems.findIndex(item => item.name === name);
+                
+                if (quantity === 0 && existingItemIndex !== -1) {
+                    // Remove item
+                    selectedItems.splice(existingItemIndex, 1);
+                } else if (quantity > 0) {
+                    if (existingItemIndex !== -1) {
+                        // Update existing item
+                        selectedItems[existingItemIndex].quantity = quantity;
+                    } else {
+                        // Add new item
+                        selectedItems.push({
+                            name: name,
+                            quantity: quantity,
+                            price: price
+                        });
+                    }
+                }
+                
+                updatePlatterDisplay();
+            }
+            
+            function updatePlatterDisplay() {
+                // Clear current display
+                selectedItemsContainer.innerHTML = '';
+                
+                if (selectedItems.length === 0) {
+                    // Show empty message
+                    selectedItemsContainer.appendChild(emptyPlatterMessage);
+                    platterSummary.style.display = 'none';
+                    createPlatterBtn.disabled = true;
+                } else {
+                    // Add selected items
+                    selectedItems.forEach(item => {
+                        const itemElement = document.createElement('div');
+                        itemElement.className = 'selected-item';
+                        itemElement.innerHTML = `
+                            <div class="selected-item-left">
+                                <div class="selected-item-name">${item.name}</div>
+                                <div class="selected-item-quantity">x${item.quantity}</div>
+                            </div>
+                            <div class="selected-item-price">$${(item.price * item.quantity).toFixed(2)}</div>
+                            <div class="remove-item" data-name="${item.name}">×</div>
+                        `;
+                        selectedItemsContainer.appendChild(itemElement);
+                        
+                        // Add click event to remove button
+                        itemElement.querySelector('.remove-item').addEventListener('click', function() {
+                            const itemName = this.getAttribute('data-name');
+                            const builderItem = [...builderItems].find(item => 
+                                item.querySelector('.builder-item-name').textContent === itemName
+                            );
+                            if (builderItem) {
+                                builderItem.querySelector('.qty-input').value = 0;
+                                updateSelectedItem(itemName, 0, 0);
+                            }
+                        });
+                    });
+                    
+                    // Update summary
+                    const totalItems = selectedItems.reduce((sum, item) => sum + item.quantity, 0);
+                    const totalCost = selectedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                    const estimatedServings = Math.max(1, Math.floor(totalItems / 3));
+                    
+                    itemsCount.textContent = totalItems;
+                    servingsCount.textContent = estimatedServings;
+                    totalPrice.textContent = `$${totalCost.toFixed(2)}`;
+                    
+                    platterSummary.style.display = 'block';
+                    createPlatterBtn.disabled = false;
+                }
+            }
+            
+            // Add-ons functionality
+            const addonCheckboxes = document.querySelectorAll('.addon-checkbox');
+            
+            addonCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const addonCard = this.closest('.addon-card');
+                    if (this.checked) {
+                        addonCard.style.animation = 'highlight 1s ease';
+                    } else {
+                        addonCard.style.animation = 'none';
+                    }
+                });
+            });
+            
+            // Booking tab functionality
+            const serviceTypeRadios = document.querySelectorAll('input[name="service-type"]');
+            const deliveryAddressGroup = document.getElementById('delivery-address-group');
+            
+            serviceTypeRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.value === 'delivery') {
+                        deliveryAddressGroup.style.display = 'block';
+                    } else {
+                        deliveryAddressGroup.style.display = 'none';
+                    }
+                });
+            });
+            
+            // Get restaurant ID from URL parameter
+            function getRestaurantId() {
+                const urlParams = new URLSearchParams(window.location.search);
+                return urlParams.get('id') || '1'; // Default to ID 1 if not specified
+            }
+            
+            // Load restaurant details from API or use fallback data
+            function loadRestaurantDetails() {
+                const restaurantId = getRestaurantId();
+                
+                // Show loading state
+                document.getElementById('restaurant-name').textContent = 'Loading...';
+                
+                // Fetch from API or use demo data
+                fetch(`/api/restaurants/${restaurantId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success && data.restaurant) {
+                            displayRestaurantDetails(data.restaurant);
+                        } else {
+                            // Use fallback data if API fails
+                            displayFallbackRestaurantDetails(restaurantId);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching restaurant details:', error);
+                        displayFallbackRestaurantDetails(restaurantId);
+                    });
+            }
+            
+            function displayRestaurantDetails(restaurant) {
+                // Update breadcrumb
+                document.getElementById('restaurant-name-breadcrumb').textContent = restaurant.name;
+                
+                // Update title
+                document.title = `${restaurant.name} - TableFete`;
+                
+                // Update restaurant info
+                document.getElementById('restaurant-name').textContent = restaurant.name;
+                document.getElementById('restaurant-subtitle').textContent = `${restaurant.cuisine} Restaurant in ${restaurant.address.split(',')[0]}`;
+                
+                // Update rating
+                const ratingHtml = `
+                    ${'★'.repeat(Math.floor(restaurant.rating || 4))}${(restaurant.rating % 1 >= 0.5) ? '⭐' : ''}
+                    <span>(${restaurant.numReviews || 0} reviews)</span>
+                `;
+                document.getElementById('restaurant-rating').innerHTML = ratingHtml;
+                
+                // Update basic info
+                document.getElementById('restaurant-address').textContent = restaurant.address;
+                document.getElementById('restaurant-phone').textContent = restaurant.phone || '(555) 123-4567';
+                document.getElementById('restaurant-cuisine').textContent = restaurant.cuisine;
+                document.getElementById('restaurant-price').textContent = '$'.repeat(restaurant.priceRange || 2);
+                
+                // Set hours
+                let hoursText = 'Open daily 11:00 AM - 10:00 PM';
+                if (restaurant.hours && restaurant.hours.monday) {
+                    hoursText = `Open today ${restaurant.hours.monday.open || '11:00'} - ${restaurant.hours.monday.close || '22:00'}`;
+                }
+                document.getElementById('restaurant-hours').textContent = hoursText;
+                
+                // Setup features
+                const featureList = document.getElementById('feature-list');
+                featureList.innerHTML = '';
+                
+                const features = restaurant.features || [
+                    { name: 'Private Room', icon: 'door-closed' },
+                    { name: 'Outdoor Seating', icon: 'tree' },
+                    { name: 'Live Music', icon: 'music' },
+                    { name: 'Wheelchair Accessible', icon: 'wheelchair' },
+                    { name: 'Parking Available', icon: 'car' }
+                ];
+                
+                features.forEach(feature => {
+                    const featureTag = document.createElement('div');
+                    featureTag.className = 'feature-tag';
+                    featureTag.innerHTML = `<i class="fas fa-${feature.icon || 'check'}"></i> ${feature.name}`;
+                    featureList.appendChild(featureTag);
+                });
+                
+                // Setup carousel
+                setupCarousel(restaurant.images || [
+                    'https://pixabay.com/get/g60792b4e5c0c6cf12caab98004ce568476b8bec7bbbb38c9a3c3da07e9fa9f3036e8b57358926b934fb610d7783fe83c8432bddf3595d41bf36da9ead7cb7e3f_1280.jpg',
+                    'https://pixabay.com/get/g7975f781021705115eeef674848ef35a02c7a847d4523a0d597282a57d2cfa91436c9c4db2ae4cc5465569b4c4ab3d83127aa551192941066f8451bdc6cbedf4_1280.jpg',
+                    'https://pixabay.com/get/gf91de6caeb1fd9fa7157978faa96e575113983ebc4f627cdf7badab06852c6fe9bfc88ede4ed4e2dcd6537b61e8ec171909db429cd8f63ec276c32487e41e983_1280.jpg'
+                ]);
+            }
+            
+            function displayFallbackRestaurantDetails(restaurantId) {
+                // Fallback data for demonstration
+                const fallbackRestaurants = {
+                    '1': {
+                        id: '1',
+                        name: "Spice Garden",
+                        cuisine: "Indian",
+                        priceRange: 2,
+                        rating: 4.5,
+                        numReviews: 120,
+                        description: "Authentic Indian cuisine in a relaxed environment, perfect for celebrations.",
+                        address: "123 Main St, New York, NY 10001",
+                        phone: "(555) 123-4567",
+                        images: [
+                            "https://pixabay.com/get/g60792b4e5c0c6cf12caab98004ce568476b8bec7bbbb38c9a3c3da07e9fa9f3036e8b57358926b934fb610d7783fe83c8432bddf3595d41bf36da9ead7cb7e3f_1280.jpg",
+                            "https://pixabay.com/get/g45eb5c8e37c42765146e91360dcd53e9370c34e658ba150e6928dcad6a38205daa407126ef154a55040f3a525f24c7cce0a02b681f5e60429f6fcf2694e79dd7_1280.jpg",
+                            "https://pixabay.com/get/g820cf851572c22b72c89209839281e1b00acb2c6a67744045d73c4e8fb0698c486f5c5f6d8f075ac6c8164e4476cc96efaeb221ff83481ea0f82ac11d4920db4_1280.jpg"
+                        ],
+                        features: [
+                            { name: 'Private Room', icon: 'door-closed' },
+                            { name: 'Outdoor Seating', icon: 'tree' },
+                            { name: 'Live Music', icon: 'music' },
+                            { name: 'Wheelchair Accessible', icon: 'wheelchair' },
+                            { name: 'Parking Available', icon: 'car' }
+                        ]
+                    },
+                    '2': {
+                        id: '2',
+                        name: "Bella Italia",
+                        cuisine: "Italian",
+                        priceRange: 3,
+                        rating: 4.7,
+                        numReviews: 150,
+                        description: "Family-style Italian restaurant with a warm atmosphere, ideal for family gatherings.",
+                        address: "456 Park Ave, New York, NY 10002",
+                        phone: "(555) 234-5678",
+                        images: [
+                            "https://pixabay.com/get/g7975f781021705115eeef674848ef35a02c7a847d4523a0d597282a57d2cfa91436c9c4db2ae4cc5465569b4c4ab3d83127aa551192941066f8451bdc6cbedf4_1280.jpg",
+                            "https://pixabay.com/get/g6421df4ec41e20cc527bfbb73cac4b2b3f8445f2e5876d44c08d8046206b5d8acaca0e87c3f83ff1c4d4a366837e9984dc32d59c32b396a179035f76f2cb0518_1280.jpg",
+                            "https://pixabay.com/get/g94bdec717ee152cf03bbcb146e882df527bbc4334dfea8822e5cb1fb37a091cbfe93b74ef22cec321876afb990cc1b4014178d730c0e0a03535a2b6dd35c03af_1280.jpg"
+                        ],
+                        features: [
+                            { name: 'Private Room', icon: 'door-closed' },
+                            { name: 'Wine Cellar', icon: 'wine-bottle' },
+                            { name: 'Kids Area', icon: 'child' },
+                            { name: 'Wheelchair Accessible', icon: 'wheelchair' },
+                            { name: 'Free Parking', icon: 'car' }
+                        ]
+                    },
+                    '3': {
+                        id: '3',
+                        name: "Sushi Palace",
+                        cuisine: "Japanese",
+                        priceRange: 4,
+                        rating: 4.8,
+                        numReviews: 200,
+                        description: "Modern Japanese restaurant with private dining options for special occasions.",
+                        address: "789 Broadway, New York, NY 10003",
+                        phone: "(555) 345-6789",
+                        images: [
+                            "https://pixabay.com/get/gf91de6caeb1fd9fa7157978faa96e575113983ebc4f627cdf7badab06852c6fe9bfc88ede4ed4e2dcd6537b61e8ec171909db429cd8f63ec276c32487e41e983_1280.jpg",
+                            "https://pixabay.com/get/gc7dde8a8cf4f89bd8a3f1dabed71e871e68d56830635fd10e84505d5cce5eb2293819196ca84360a27eb24e68780454c7c3cc82037680be0fa7762db6b10e4be_1280.jpg",
+                            "https://pixabay.com/get/g6e8f238ec65646adf6286052cbfa078d85a4c530372fd17b9cb7624044ade034fc01646b0926bd1e1336e107a82480395e80168c036f5e90985f27f5b70476d8_1280.jpg"
+                        ],
+                        features: [
+                            { name: 'Private Dining', icon: 'utensils' },
+                            { name: 'Sake Bar', icon: 'glass-whiskey' },
+                            { name: 'Chef\'s Table', icon: 'hat-chef' },
+                            { name: 'Vegetarian Options', icon: 'carrot' },
+                            { name: 'Valet Parking', icon: 'car' }
+                        ]
+                    }
+                };
+                
+                const restaurant = fallbackRestaurants[restaurantId] || fallbackRestaurants['1'];
+                displayRestaurantDetails(restaurant);
+            }
+            
+            // Helper function to set up recommendation buttons
+            function setupRecommendationButtons() {
+                // "Use This Recommendation" button
+                const useRecommendationBtn = document.getElementById('use-recommendation-btn');
+                if (useRecommendationBtn) {
+                    useRecommendationBtn.addEventListener('click', function() {
+                        // Show success message
+                        alert('Recommendation added to your order!');
+                        
+                        // Navigate to booking tab
+                        const bookingTab = document.querySelector('.tab-btn[data-tab="booking"]');
+                        bookingTab.click();
+                        bookingTab.scrollIntoView({ behavior: 'smooth' });
+                    });
+                }
+                
+                // Other "Select This Platter" buttons
+                const selectPlatterBtns = document.querySelectorAll('.platter-card .select-platter-btn');
+                selectPlatterBtns.forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const platterName = this.closest('.platter-card').querySelector('.platter-title').textContent;
+                        alert(`${platterName} added to your order!`);
+                        
+                        // Navigate to booking tab
+                        const bookingTab = document.querySelector('.tab-btn[data-tab="booking"]');
+                        bookingTab.click();
+                        bookingTab.scrollIntoView({ behavior: 'smooth' });
+                    });
+                });
+                
+                // Create custom platter button
+                const createPlatterBtn = document.getElementById('create-platter-btn');
+                if (createPlatterBtn) {
+                    createPlatterBtn.addEventListener('click', function() {
+                        if (this.disabled) return;
+                        
+                        // Show success message
+                        alert('Custom platter created and added to your order!');
+                        
+                        // Navigate to booking tab
+                        const bookingTab = document.querySelector('.tab-btn[data-tab="booking"]');
+                        bookingTab.click();
+                        bookingTab.scrollIntoView({ behavior: 'smooth' });
+                    });
+                }
+            }
+            
+            function setupCarousel(images) {
+                // Default images if none provided
+                if (!images || images.length === 0) {
+                    images = [
+                        'https://images.pexels.com/photos/262978/pexels-photo-262978.jpeg',
+                        'https://images.pexels.com/photos/67468/pexels-photo-67468.jpeg',
+                        'https://images.pexels.com/photos/260922/pexels-photo-260922.jpeg'
+                    ];
+                }
+                
+                // Update carousel items
+                const carouselInner = document.getElementById('carousel-inner');
+                carouselInner.innerHTML = '';
+                
+                images.forEach(imageUrl => {
+                    const item = document.createElement('div');
+                    item.className = 'carousel-item';
+                    // Fix image URL to use reliable sources
+                    const fixedUrl = imageUrl.includes('pixabay.com/get/') ? 
+                        'https://images.pexels.com/photos/260922/pexels-photo-260922.jpeg' : imageUrl;
+                    item.style.backgroundImage = `url('${fixedUrl}')`;
+                    carouselInner.appendChild(item);
+                });
+                
+                totalSlides = images.length;
+                
+                // Update indicators
+                const indicatorsContainer = document.getElementById('carousel-indicators');
+                indicatorsContainer.innerHTML = '';
+                
+                for (let i = 0; i < totalSlides; i++) {
+                    const indicator = document.createElement('div');
+                    indicator.className = 'carousel-indicator' + (i === 0 ? ' active' : '');
+                    indicator.addEventListener('click', function() {
+                        currentIndex = i;
+                        updateCarousel();
+                    });
+                    indicatorsContainer.appendChild(indicator);
+                }
+                
+                // Reset to first slide
+                currentIndex = 0;
+                updateCarousel();
+            }
+        });
+    </script>
+</body>
+</html>

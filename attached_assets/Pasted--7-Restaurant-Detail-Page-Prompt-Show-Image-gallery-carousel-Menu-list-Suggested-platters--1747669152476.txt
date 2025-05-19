@@ -1,0 +1,119 @@
+✅ 7. Restaurant Detail Page
+Prompt:
+
+Show:
+
+Image gallery (carousel)
+
+Menu list
+
+Suggested platters (AI-based)
+
+Checkbox options for addons (musician, singer, etc.)
+
+Build your own platter from menu (drag/drop UI or checkbox + quantity)
+
+Add animated transitions between sections.
+
+✅ 8. AI-Based Platter Suggestion (Core Logic)
+Prompt:
+
+Use AI to recommend a platter within the user’s per-person budget.
+
+Example logic:
+
+js
+Copy
+Edit
+budget = 2000, people = 4 → max per person = 500
+Use a greedy + recommendation algorithm:
+1. Prioritize best-rated items under 500
+2. Use OpenAI to suggest a balanced combo of main + sides + drinks
+✅ 9. Booking Flow
+Prompt:
+
+Ask user:
+
+Visit restaurant or home delivery?
+
+If visiting → date/time selection (use react-native-datepicker)
+
+Pay now (Stripe/Razorpay) or pay later
+
+Integrate payment gateway with booking API.
+
+✅ 10. My Account Section
+Prompt:
+
+Display:
+
+Previous bookings (list with date/time, restaurant, amount)
+
+Option to reorder or rebook
+
+Profile settings
+
+Support section (chat or form)
+
+✅ 11. Admin Panel in Node.js
+Prompt:
+
+Build Admin Panel to manage:
+
+Restaurants & their menus
+
+Add/Edit services (e.g. Guitarist)
+
+View all bookings
+
+AI suggestion logs (optional)
+
+Customer messages/support
+
+Use AdminBro, React-admin, or custom dashboard using React + Express.
+
+✅ 12. Animations and Design
+Prompt:
+
+Use:
+
+Lottie for splash, transitions
+
+Animated API for screen changes
+
+Bright, festive theme colors (e.g., pink, yellow, blue gradients)
+
+Icons from React Native Vector Icons
+
+🧠 AI Prompts for Platter Suggestions
+Use OpenAI's GPT with a prompt like:
+
+“Suggest a platter of food items for a birthday party of 4 people with a total budget of ₹2000. The platter should include starters, main course, and drinks, and stay within budget.”
+
+You can then filter the suggestions programmatically to match actual menu items.
+
+📝 DATABASE STRUCTURE SUGGESTION
+Users: id, name, phone, bookings[]
+
+Restaurants: id, name, location, menu[], services[]
+
+MenuItems: id, name, price, category, restaurantId
+
+PlatterSuggestions: id, items[], totalPrice, tags[]
+
+Bookings: userId, restaurantId, date, time, platter[], addons[], deliveryType, status
+
+📱 FINAL TIP
+Start development in modules:
+
+Authentication + OTP
+
+Location + Filters
+
+Restaurant Listing + Details
+
+Booking Engine
+
+Admin Panel
+
+AI Integration

@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TableFete - Find Restaurants</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #E91E63, #7C4DFF);
+            color: white;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            color: #E91E63;
+            font-size: 20px;
+        }
+        
+        .logo-text {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .back-button {
+            padding: 8px 15px;
+            background-color: rgba(255,255,255,0.2);
+            border-radius: 50px;
+            text-decoration: none;
+            color: white;
+            font-weight: 500;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .back-button span {
+            margin-left: 5px;
+        }
+
+        main {
+            padding-top: 100px;
+            padding-bottom: 40px;
+            min-height: 100vh;
+        }
+        
+        .page-title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .page-title h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .page-title p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .filter-container {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            padding: 30px;
+            margin-bottom: 30px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            transition: transform 0.3s ease;
+        }
+        
+        .filter-container:hover {
+            transform: translateY(-5px);
+        }
+        
+        .filter-section {
+            margin-bottom: 30px;
+        }
+        
+        .filter-section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .filter-section h2 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #E91E63;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .filter-section h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: #E91E63;
+            border-radius: 3px;
+        }
+        
+        /* Party Type Radio Buttons */
+        .party-types {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .party-type-option {
+            position: relative;
+            flex: 1 0 180px;
+        }
+        
+        .party-type-option input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        .party-type-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 15px;
+            background-color: #f9f9f9;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .party-type-icon {
+            font-size: 28px;
+            margin-bottom: 10px;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+        
+        .party-type-option input:checked + .party-type-label {
+            border-color: #E91E63;
+            background-color: #FCE4EC;
+        }
+        
+        .party-type-option input:checked + .party-type-label .party-type-icon {
+            transform: scale(1.2);
+            color: #E91E63;
+        }
+        
+        .party-type-option:hover .party-type-label {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        /* Number of People Dropdown */
+        .people-select-container {
+            position: relative;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        .people-select {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 16px;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            background-color: white;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .people-select:focus {
+            outline: none;
+            border-color: #E91E63;
+            box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.2);
+        }
+        
+        .select-arrow {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: #666;
+            transition: transform 0.3s ease;
+        }
+        
+        .people-select:focus + .select-arrow {
+            transform: translateY(-50%) rotate(180deg);
+            color: #E91E63;
+        }
+        
+        /* Budget Slider */
+        .budget-slider-container {
+            margin-top: 20px;
+            position: relative;
+            padding-bottom: 30px;
+        }
+        
+        .budget-slider {
+            width: 100%;
+            -webkit-appearance: none;
+            height: 6px;
+            border-radius: 3px;
+            background: linear-gradient(to right, #E91E63, #7C4DFF);
+            outline: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .budget-slider:hover {
+            opacity: 0.9;
+        }
+        
+        .budget-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: white;
+            border: 2px solid #E91E63;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .budget-slider::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: white;
+            border: 2px solid #E91E63;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .budget-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 0 5px rgba(233, 30, 99, 0.2);
+        }
+        
+        .budget-slider::-moz-range-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 0 5px rgba(233, 30, 99, 0.2);
+        }
+        
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .budget-value {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #E91E63;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        /* Apply Filters Button */
+        .apply-filters {
+            display: block;
+            width: 100%;
+            max-width: 400px;
+            margin: 30px auto 0;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #E91E63, #7C4DFF);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+        
+        .apply-filters:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+        
+        .apply-filters:active {
+            transform: translateY(0);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+        
+        .results-preview {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 16px;
+            color: #666;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @media (max-width: 768px) {
+            .party-types {
+                gap: 10px;
+            }
+            
+            .party-type-option {
+                flex: 1 0 calc(50% - 10px);
+            }
+            
+            .party-type-label {
+                padding: 15px 10px;
+            }
+            
+            .party-type-icon {
+                font-size: 24px;
+            }
+            
+            .filter-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">🍽️</div>
+                    <div class="logo-text">TableFete</div>
+                </div>
+                <a href="index.html" class="back-button">
+                    &larr; <span>Back to Home</span>
+                </a>
+            </div>
+        </div>
+    </header>
+    
+    <main>
+        <div class="container">
+            <div class="page-title">
+                <h1>Find Restaurants for Your Event</h1>
+                <p>Apply filters to discover the perfect venue for your celebration</p>
+            </div>
+            
+            <div class="filter-container">
+                <div class="filter-section">
+                    <h2>Type of Party</h2>
+                    <p>Select the type of event you're planning to celebrate</p>
+                    
+                    <div class="party-types">
+                        <div class="party-type-option">
+                            <input type="radio" id="birthday" name="party-type" value="birthday" checked>
+                            <label for="birthday" class="party-type-label">
+                                <div class="party-type-icon">🎂</div>
+                                Birthday
+                            </label>
+                        </div>
+                        
+                        <div class="party-type-option">
+                            <input type="radio" id="anniversary" name="party-type" value="anniversary">
+                            <label for="anniversary" class="party-type-label">
+                                <div class="party-type-icon">💍</div>
+                                Anniversary
+                            </label>
+                        </div>
+                        
+                        <div class="party-type-option">
+                            <input type="radio" id="corporate" name="party-type" value="corporate">
+                            <label for="corporate" class="party-type-label">
+                                <div class="party-type-icon">💼</div>
+                                Corporate
+                            </label>
+                        </div>
+                        
+                        <div class="party-type-option">
+                            <input type="radio" id="wedding" name="party-type" value="wedding">
+                            <label for="wedding" class="party-type-label">
+                                <div class="party-type-icon">👰</div>
+                                Wedding
+                            </label>
+                        </div>
+                        
+                        <div class="party-type-option">
+                            <input type="radio" id="casual" name="party-type" value="casual">
+                            <label for="casual" class="party-type-label">
+                                <div class="party-type-icon">🍻</div>
+                                Casual Gathering
+                            </label>
+                        </div>
+                        
+                        <div class="party-type-option">
+                            <input type="radio" id="graduation" name="party-type" value="graduation">
+                            <label for="graduation" class="party-type-label">
+                                <div class="party-type-icon">🎓</div>
+                                Graduation
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="filter-section">
+                    <h2>Number of People</h2>
+                    <p>How many guests are you expecting?</p>
+                    
+                    <div class="people-select-container">
+                        <select id="people-select" class="people-select">
+                            <option value="1-10">1-10 people (Small)</option>
+                            <option value="11-20" selected>11-20 people (Medium)</option>
+                            <option value="21-50">21-50 people (Large)</option>
+                            <option value="51-100">51-100 people (Very Large)</option>
+                            <option value="100+">100+ people (Extra Large)</option>
+                        </select>
+                        <div class="select-arrow">▼</div>
+                    </div>
+                </div>
+                
+                <div class="filter-section">
+                    <h2>Budget Per Person</h2>
+                    <p>Select your budget range per person (optional)</p>
+                    
+                    <div class="budget-value">$<span id="budget-display">50</span></div>
+                    
+                    <div class="budget-slider-container">
+                        <input type="range" min="10" max="100" value="50" class="budget-slider" id="budget-slider">
+                        <div class="slider-labels">
+                            <span>$10</span>
+                            <span>$100+</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="apply-filters" id="apply-filters">Find Restaurants</button>
+                
+                <div class="results-preview" id="results-preview"></div>
+            </div>
+        </div>
+    </main>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Budget slider functionality
+            const budgetSlider = document.getElementById('budget-slider');
+            const budgetDisplay = document.getElementById('budget-display');
+            
+            budgetSlider.addEventListener('input', function() {
+                budgetDisplay.textContent = this.value;
+                
+                // Add a subtle animation
+                budgetDisplay.style.transform = 'scale(1.2)';
+                setTimeout(() => {
+                    budgetDisplay.style.transform = 'scale(1)';
+                }, 200);
+            });
+            
+            // Apply filters button
+            const applyButton = document.getElementById('apply-filters');
+            const resultsPreview = document.getElementById('results-preview');
+            
+            applyButton.addEventListener('click', function() {
+                // Get selected values
+                const partyType = document.querySelector('input[name="party-type"]:checked').value;
+                const peopleCount = document.getElementById('people-select').value;
+                const budget = budgetSlider.value;
+                
+                // Show searching state
+                applyButton.textContent = 'Searching...';
+                applyButton.disabled = true;
+                
+                // Simulate API call delay, then redirect to restaurants page
+                setTimeout(() => {
+                    // Store filter values in sessionStorage so they're available on the restaurants page
+                    const filterData = {
+                        partyType: partyType,
+                        peopleCount: peopleCount,
+                        budget: budget,
+                        partyTypeEmoji: document.querySelector(`#${partyType} + .party-type-label .party-type-icon`).textContent
+                    };
+                    
+                    sessionStorage.setItem('filterData', JSON.stringify(filterData));
+                    
+                    // Redirect to restaurants page with filter parameters
+                    window.location.href = `restaurants.html?partyType=${partyType}&peopleCount=${peopleCount}&budget=${budget}`;
+                }, 1000);
+            });
+            
+            // Radio button animations
+            const partyOptions = document.querySelectorAll('.party-type-option input');
+            partyOptions.forEach(option => {
+                option.addEventListener('change', function() {
+                    if (this.checked) {
+                        const icon = this.nextElementSibling.querySelector('.party-type-icon');
+                        
+                        // Reset and restart animation
+                        icon.style.animation = 'none';
+                        setTimeout(() => {
+                            icon.style.animation = 'bounce 0.5s ease';
+                        }, 10);
+                    }
+                });
+            });
+            
+            // Add keyframes for bounce animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes bounce {
+                    0%, 100% { transform: scale(1); }
+                    50% { transform: scale(1.3); }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // Animate select on focus
+            const peopleSelect = document.getElementById('people-select');
+            peopleSelect.addEventListener('focus', function() {
+                this.style.transform = 'scale(1.02)';
+            });
+            
+            peopleSelect.addEventListener('blur', function() {
+                this.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>
