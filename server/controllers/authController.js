@@ -413,35 +413,6 @@ exports.adminRegister = async (req, res) => {
       });
     }
 
-    // Create new admin user
-    const user = new User({
-      name,
-      email,
-      password,
-      phoneNumber: '0000000000', // Default phone number
-      role: 'admin'
-    });
-    await user.save();
-
-    res.status(201).json({
-      success: true,
-      message: 'Registration successful'
-    });
-      return res.status(400).json({
-        success: false,
-        message: 'All fields are required'
-      });
-    }
-
-    // Check if admin already exists
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({
-        success: false,
-        message: 'Email already registered'
-      });
-    }
-
     // Create new admin user with hashed password
     const user = new User({
       name,
@@ -473,6 +444,15 @@ exports.adminRegister = async (req, res) => {
       success: true,
       message: 'Registration successful'
     });
+  } catch (error) {
+    console.error('Admin Registration Error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to register',
+      error: error.message
+    });
+  }
+};
   } catch (error) {
     console.error('Admin Registration Error:', error);
     res.status(500).json({
