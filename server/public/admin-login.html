@@ -71,7 +71,9 @@
                 });
 
                 const data = await response.json();
-                if (data.success) {
+                console.log('Login response:', data);
+                
+                if (response.ok && data.success) {
                     // Store token and user data
                     localStorage.setItem('token', data.token);
                     localStorage.setItem('user', JSON.stringify(data.user));

@@ -243,6 +243,7 @@ exports.adminLogin = async (req, res) => {
         message: 'Login successful',
         token,
         user: {
+          id: demoAdmin.id,
           role: demoAdmin.role,
           email: demoAdmin.email
         }
@@ -251,7 +252,7 @@ exports.adminLogin = async (req, res) => {
 
     return res.status(401).json({
       success: false,
-      message: 'Invalid credentials'
+      message: 'Invalid email or password'
     });
   } catch (error) {
     console.error('Admin Login Error:', error);
