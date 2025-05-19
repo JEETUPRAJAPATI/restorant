@@ -223,6 +223,41 @@ exports.register = async (req, res) => {
  * Login with phone number (starts OTP process)
  * @route POST /api/auth/login
  */
+exports.adminLogin = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Demo credentials
+    const demoAdmin = {
+      email: 'admin@test.com',
+      password: 'admin123'
+    };
+
+    if (email === demoAdmin.email && password === demoAdmin.password) {
+      return res.status(200).json({
+        success: true,
+        message: 'Login successful',
+        user: {
+          role: 'admin',
+          email: demoAdmin.email
+        }
+      });
+    }
+
+    return res.status(401).json({
+      success: false,
+      message: 'Invalid credentials'
+    });
+  } catch (error) {
+    console.error('Admin Login Error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to login',
+      error: error.message
+    });
+  }
+};
+
 exports.login = async (req, res) => {
   try {
     const { phoneNumber } = req.body;
