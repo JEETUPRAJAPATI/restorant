@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -81,7 +80,8 @@
                     alert(data.message || 'Invalid credentials');
                 }
             } catch (error) {
-                alert('Login failed');
+                console.error('Login error:', error);
+                alert('Login failed. Please try again.');
             }
         });
     </script>

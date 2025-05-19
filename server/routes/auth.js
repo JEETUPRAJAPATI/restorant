@@ -153,6 +153,13 @@ router.post('/register', (req, res) => {
  */
 router.post('/admin-register', authController.adminRegister);
 
+/**
+ * @route POST /api/auth/admin-login
+ * @desc Login restaurant admin
+ * @access Public
+ */
+router.post('/admin-login', authController.adminLogin);
+
 router.post('/login', (req, res) => {
   try {
     const { phoneNumber } = req.body;
